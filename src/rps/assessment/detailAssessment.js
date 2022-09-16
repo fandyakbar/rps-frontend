@@ -78,31 +78,29 @@ function withRouter(Component) {
   return ComponentWithRouterProp;
 }
 
-function CPMK(props) {
+function DetailAssessment(props) {
   // console.warn("props", props.router.params.id);
 
   // cpmk
-  const [cpmk, setCPMK] = useState([]);
+  const [assessment, setAssessment] = useState([]);
 
   const { size } = typography;
   // const token = localStorage.getItem('token');
-  const id_cpmk = props.router.params.id;
+  const id_assessment = props.router.params.id;
 
-  async function fetchData() {
+  const fetchData = async () => {
     await axios
-      .get(`http://127.0.0.1:8000/api/cpmk/${id_cpmk}`)
+      .get(`http://127.0.0.1:8000/api/assessment/${id_assessment}`)
 
       .then((response) => {
-        setCPMK(response.data);
-        console.warn("data", response.data);
+        setAssessment(response.data);
       });
-  }
-
+  };
   useEffect(() => {
     fetchData();
   }, []);
 
-  console.warn("cpmk", cpmk);
+  console.warn("di sini cek", assessment);
 
   // cpmk.map((datas)=>{
   //   const matkul = datas.matkul
@@ -115,8 +113,8 @@ function CPMK(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // Tambah CPMK
-  const [code, setCode] = useState("");
+  // Tambah Assessment
+  const [percentage, setPercentage] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
@@ -127,11 +125,11 @@ function CPMK(props) {
 
     const formData = new FormData();
 
-    formData.append("code", code);
+    formData.append("percentage", percentage);
     formData.append("name", name);
 
     await axios
-      .post(`http://127.0.0.1:8000/api/cpmk/${id_cpmk}`, formData)
+      .post(`http://127.0.0.1:8000/api/assessment/${id_assessment}`, formData)
       .then((response) => {
         console.log("result", response);
         fetchData();
@@ -142,7 +140,7 @@ function CPMK(props) {
   };
 
   async function ambilData() {
-    let result = await fetch("http://127.0.0.1:8000/api/cpmk/" + id_cpmk, {
+    let result = await fetch("http://127.0.0.1:8000/api/assessment/" + id_assessment, {
       method: `GET`,
     });
     result = await result.json();
@@ -153,7 +151,7 @@ function CPMK(props) {
     // alert(`Yeee di klik ${id}`);
     let text = "Yakin Ingin Menghapus Data??";
     if (confirm(text) == true) {
-      let result = await fetch(`http://127.0.0.1:8000/api/cpmk/delete/${idHapus}`, {
+      let result = await fetch(`http://127.0.0.1:8000/api/assessment/delete/${idHapus}`, {
         method: `DELETE`,
       });
 
@@ -182,12 +180,12 @@ function CPMK(props) {
                   borderRadius="lg"
                   coloredShadow="info"
                 >
-                  {cpmk.map((datas) => (
+                  {assessment.map((datas) => (
                     <div>
                       {datas.matkul.map((mk) => (
                         <MDBox>
                           <MDTypography variant="h6" color="white">
-                            CPMK {mk.name}
+                            Assessment {mk.name}
                             <MDBox px={4} align="right">
                               <MDButton
                                 onClick={handleOpen}
@@ -229,7 +227,7 @@ function CPMK(props) {
                                           color="white"
                                           mt={1}
                                         >
-                                          Tambah CPMK
+                                          Tambah Assessment
                                         </MDTypography>
                                       </MDBox>
                                       <MDBox pt={4} pb={3} px={3}>
@@ -238,10 +236,10 @@ function CPMK(props) {
                                           <MDBox mb={2}>
                                             <MDInput
                                               type="text"
-                                              label="code"
+                                              label="percentage"
                                               fullWidth
-                                              value={code}
-                                              onChange={(e) => setCode(e.target.value)}
+                                              value={percentage}
+                                              onChange={(e) => setPercentage(e.target.value)}
                                             />
                                           </MDBox>
                                           <MDBox mb={2}>
@@ -254,19 +252,14 @@ function CPMK(props) {
                                             />
                                           </MDBox>
 
-                                          <MDBox mb={2}>
-                                            <MDTypography>
-                                              <input type="checkbox" /> Sub-CPMK
-                                            </MDTypography>
-                                          </MDBox>
                                           <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
 
                                           <MDBox mt={4} mb={1}>
                                             <MDButton
                                               type="submit"
                                               variant="gradient"
-                                              onClick={handleClose}
                                               color="info"
+                                              onClick={handleClose}
                                               fullWidth
                                             >
                                               Tambah
@@ -294,10 +287,10 @@ function CPMK(props) {
                     <Table size="small">
                       <TableRow>
                         <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Code </MDTypography>
+                          <MDTypography variant="h6"> Kriteria </MDTypography>
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Kriteria </MDTypography>
+                          <MDTypography variant="h6"> Presentase </MDTypography>
                         </DataTableHeadCell>
 
                         <DataTableHeadCell component="th" align="center">
@@ -305,25 +298,24 @@ function CPMK(props) {
                         </DataTableHeadCell>
                       </TableRow>
 
-                      {cpmk.map((datas) => (
+                      {assessment.map((datas) => (
                         <TableBody>
-                          {datas.datas.map((cpmkitem) => (
+                          {datas.datas.map((asitem) => (
                             <TableRow>
-                              <DataTableBodyCell>{cpmkitem.code}</DataTableBodyCell>
                               <DataTableBodyCell>
                                 <MDBox
                                   display="inline-block"
-                                  width="40em"
+                                  width="30em"
                                   color="text"
                                   fontSize={size.sm}
                                   px={1.5}
                                 >
-                                  {cpmkitem.name}
+                                  {asitem.name}
                                 </MDBox>
                               </DataTableBodyCell>
-
+                              <DataTableBodyCell>{asitem.percentage} %</DataTableBodyCell>
                               <DataTableBodyCell>
-                                <Link to={`/cpmk/show/${cpmkitem.id}`}>
+                                <Link to={`/assessment/show/${asitem.id}`}>
                                   <MDButton
                                     variant="contained"
                                     color="success"
@@ -339,13 +331,21 @@ function CPMK(props) {
                                   color="error"
                                   size="medium"
                                   iconOnly={true}
-                                  onClick={() => hapusData(cpmkitem.id)}
+                                  onClick={() => hapusData(asitem.id)}
                                 >
                                   <DeleteIcon fontSize="large" />
                                 </MDButton>
                               </DataTableBodyCell>
                             </TableRow>
                           ))}
+                          <TableRow>
+                            <DataTableBodyCell>
+                              <MDTypography variant="h6"> Total </MDTypography>
+                            </DataTableBodyCell>
+                            <DataTableBodyCell>
+                              <MDTypography variant="h6"> Ini Totalnya </MDTypography>
+                            </DataTableBodyCell>
+                          </TableRow>
                         </TableBody>
                       ))}
                     </Table>
@@ -363,4 +363,4 @@ function CPMK(props) {
   );
 }
 
-export default withRouter(CPMK);
+export default withRouter(DetailAssessment);

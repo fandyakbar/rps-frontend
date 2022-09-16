@@ -44,6 +44,8 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import Assessment from "rps/assessment";
+import DetailAssessment from "rps/assessment/detailAssessment";
 
 // Komponen Dari fandy
 import Rubrik from "rps/rubrik";
@@ -51,6 +53,11 @@ import CPMK from "rps/cpmk";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import ShowRubrik from "rps/rubrik/showRubrik";
+import DetailRPS from "layouts/dashboard/detailRPS";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import ShowAssessment from "rps/assessment/showAssessment";
+import ShowCPMK from "rps/cpmk/showCPMK";
 
 const routes = [
   {
@@ -69,14 +76,14 @@ const routes = [
     route: "/cpmk",
     component: <Tables />,
   },
-  
+
   {
     type: "collapse",
     name: "Assessment Penilaian",
     key: "assessment",
     icon: <Icon fontSize="small">calculate</Icon>,
     route: "/assessment",
-    component: <Billing />,
+    component: <Assessment />,
   },
   {
     type: "collapse",
@@ -86,23 +93,7 @@ const routes = [
     route: "/rubrik",
     component: <Rubrik />,
   },
-  {
-    type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">exit_to_app</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-  },
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
 
-  },
   {
     type: "divider",
     name: "Log In",
@@ -111,17 +102,59 @@ const routes = [
     route: "/authentication/sign-in",
     component: <SignIn />,
   },
-  
+
   {
-    type: "divider",
+    type: "lamandetail",
     name: "cpmk_detail",
     key: "cpmk_detail",
-    icon: <Icon fontSize="small">login</Icon>,
+    icon: <Icon fontSize="small">Haha</Icon>,
     route: "/cpmk_detail/:id",
     component: <CPMK />,
   },
 
-];
+  {
+    type: "lamandetail",
+    name: "cpmk_detail",
+    key: "cpmk_detail",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/assessment_detail/:id",
+    component: <DetailAssessment />,
+  },
 
+  {
+    type: "lamandetailrubrik",
+    name: "rubrik_detail",
+    key: "rubrik_detail",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/rubrik_detail/:id",
+    component: <ShowRubrik />,
+  },
+  {
+    type: "lamandetailrps",
+    name: "myrps",
+    key: "myrps",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/myrps/:id",
+    component: <DetailRPS />,
+  },
+
+  {
+    type: "lamaneditAssessment",
+    name: "lamaneditAssessment",
+    key: "lamaneditAssessment",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/assessment/show/:id",
+    component: <ShowAssessment />,
+  },
+
+  {
+    type: "lamaneditCPMK",
+    name: "lamaneditCPMK",
+    key: "lamaneditCPMK",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/cpmk/show/:id",
+    component: <ShowCPMK />,
+  },
+];
 
 export default routes;

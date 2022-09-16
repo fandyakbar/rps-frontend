@@ -42,13 +42,16 @@ import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 
 // Link
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-function Dashboard() {
+function Assessment() {
   // Rubrik
   const [listRubrik, setlistRubrik] = useState([]);
   const { size } = typography;
+  const token = localStorage.getItem("token");
 
   const fetchData = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     await axios
       .get("http://127.0.0.1:8000/api/listrubrik")
 
@@ -81,7 +84,7 @@ function Dashboard() {
                   coloredShadow="info"
                 >
                   <MDTypography variant="h6" color="white">
-                    List My RPS
+                    Assessment RPS
                   </MDTypography>
                 </MDBox>
 
@@ -116,7 +119,7 @@ function Dashboard() {
                             <DataTableBodyCell>{list.credit}</DataTableBodyCell>
                             <DataTableBodyCell>{list.semester}</DataTableBodyCell>
                             <DataTableBodyCell>
-                              <Link to={"/myrps/" + list.course_plan_id}>
+                              <Link to={`/assessment_detail/${list.course_plan_id}`}>
                                 <MDButton
                                   variant="gradient"
                                   color="info"
@@ -145,4 +148,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Assessment;

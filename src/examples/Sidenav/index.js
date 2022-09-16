@@ -18,8 +18,8 @@ import React, { useEffect, useState } from "react";
 // react-router-dom components
 import { useLocation, NavLink } from "react-router-dom";
 
-import axios from 'axios';
-import {useNavigate} from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -147,36 +147,30 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   const fetchData = async () => {
-
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    await axios.get('http://127.0.0.1:8000/api/auth/me')
-    .then ((response)=>{
-
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
       setUser(response.data);
+    });
+  };
 
-    })
-  }
-
-  useEffect(()=>{
+  useEffect(() => {
     if (!token) {
-      navigate('/authentication/sign-in');
+      navigate("/authentication/sign-in");
     }
     fetchData();
   }, []);
 
   const logoutHandler = async () => {
-
-    console.log('halo', token)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    await axios.post('http://127.0.0.1:8000/api/auth/logout' )
-    .then(()=>{
+    console.log("halo", token);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.post("http://127.0.0.1:8000/api/auth/logout").then(() => {
       localStorage.removeItem("token");
-      navigate('/authentication/sign-in');
-    }) 
-  }
+      navigate("/authentication/sign-in");
+    });
+  };
 
   return (
     <SidenavRoot
@@ -224,13 +218,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           rel="noreferrer"
           sx={{ textDecoration: "none" }}
         >
-          <SidenavCollapse
-            name='Log Out'
-            icon= 'ArrowCircleLeft'
-          />
+          <SidenavCollapse name="Log Out" icon={<Icon fontSize="small">exit_to_app</Icon>} />
         </Link>
-      </List>         
-      
+      </List>
     </SidenavRoot>
   );
 }
