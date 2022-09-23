@@ -210,7 +210,26 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           (darkMode && !transparentSidenav && whiteSidenav)
         }
       />
-      <List>{renderRoutes}</List>
+      <List>
+        <NavLink key="dashboard" to="/dahsboard">
+          <SidenavCollapse
+            name="Dashboard"
+            icon={<Icon fontSize="small">dashboard</Icon>}
+            active={"dashboard" === collapseName}
+          />
+        </NavLink>
+      </List>
+      {(() => {
+        if (user.type === "D" || user.type === "T") {
+          return <List>{renderRoutes}</List>;
+        }
+      })()}
+      <Divider
+        light={
+          (!darkMode && !whiteSidenav && !transparentSidenav) ||
+          (darkMode && !transparentSidenav && whiteSidenav)
+        }
+      />
       <List>
         <Link
           onClick={logoutHandler}

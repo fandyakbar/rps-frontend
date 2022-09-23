@@ -47,6 +47,10 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import logoUnand from "assets/images/logo-ct.png";
 
+// Notif
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Basic() {
   // Errror Pesan
   const [errorSB, setErrorSB] = useState(false);
@@ -93,10 +97,11 @@ function Basic() {
         localStorage.setItem("token", response.data.access_token);
         console.log("result", response);
 
-        navigate("/dashboard");
+        navigate("/");
       })
       .catch((error) => {
         setValidation(error.response.data);
+        toast.error(error.response.data.error);
       });
   };
 
@@ -106,8 +111,11 @@ function Basic() {
     }
   });
 
+  const notify = () => toast.info("Mencoba Masuk");
+
   return (
     <BasicLayout image={bgImage}>
+      <ToastContainer />
       <Card>
         <MDBox
           variant="gradient"
@@ -126,21 +134,6 @@ function Basic() {
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Login
           </MDTypography>
-          {validation.error && (
-            <MDBox mt={4} mb={1}>
-              <MDButton
-                alignItems="center"
-                textAlign="center"
-                variant="gradient"
-                color="error"
-                onClick={openErrorSB}
-                fullWidth
-              >
-                {validation.error}
-              </MDButton>
-              {renderErrorSB}
-            </MDBox>
-          )}
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
@@ -166,7 +159,7 @@ function Basic() {
             <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
 
             <MDBox mt={4} mb={1}>
-              <MDButton type="submit" variant="gradient" color="info" fullWidth>
+              <MDButton type="submit" variant="gradient" onClick={notify} color="info" fullWidth>
                 Login
               </MDButton>
             </MDBox>

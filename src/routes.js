@@ -58,16 +58,18 @@ import DetailRPS from "layouts/dashboard/detailRPS";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ShowAssessment from "rps/assessment/showAssessment";
 import ShowCPMK from "rps/cpmk/showCPMK";
+import ShowRubrikDashboard from "rps/dashboard";
 
 const routes = [
   {
-    type: "collapse",
-    name: "My RPS",
+    type: "dashboard",
+    name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
-    component: <Dashboard />,
+    component: <Profile />,
   },
+
   {
     type: "collapse",
     name: "CPMK",
@@ -95,7 +97,7 @@ const routes = [
   },
 
   {
-    type: "divider",
+    type: "Login",
     name: "Log In",
     key: "signin",
     icon: <Icon fontSize="small">login</Icon>,
@@ -106,7 +108,7 @@ const routes = [
   {
     type: "lamandetail",
     name: "cpmk_detail",
-    key: "cpmk_detail",
+    key: "cpmk",
     icon: <Icon fontSize="small">Haha</Icon>,
     route: "/cpmk_detail/:id",
     component: <CPMK />,
@@ -115,7 +117,7 @@ const routes = [
   {
     type: "lamandetail",
     name: "cpmk_detail",
-    key: "cpmk_detail",
+    key: "cpmk",
     icon: <Icon fontSize="small">Haha</Icon>,
     route: "/assessment_detail/:id",
     component: <DetailAssessment />,
@@ -128,6 +130,15 @@ const routes = [
     icon: <Icon fontSize="small">Haha</Icon>,
     route: "/rubrik_detail/:id",
     component: <ShowRubrik />,
+  },
+
+  {
+    type: "lamandetaildashboard",
+    name: "dashboard_detail",
+    key: "dashboard_detail",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/dashboard/:id",
+    component: <ShowRubrikDashboard />,
   },
   {
     type: "lamandetailrps",
@@ -150,7 +161,7 @@ const routes = [
   {
     type: "lamaneditCPMK",
     name: "lamaneditCPMK",
-    key: "lamaneditCPMK",
+    key: "cpmk",
     icon: <Icon fontSize="small">Haha</Icon>,
     route: "/cpmk/show/:id",
     component: <ShowCPMK />,

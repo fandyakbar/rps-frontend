@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -60,12 +61,28 @@ function Assessment() {
       });
   };
 
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+
+  const fetchDataUser = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
+      setUser(response.data);
+    });
+  };
+
   useEffect(() => {
+    fetchDataUser();
     fetchData();
   }, []);
 
   return (
     <DashboardLayout>
+      {(() => {
+        if (user.type === "M") {
+          navigate("/");
+        }
+      })()}
       <DashboardNavbar />
       <MDBox py={3}>
         <MDBox>

@@ -52,6 +52,10 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 
+// Notifikasi
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -96,7 +100,19 @@ function DetailAssessment(props) {
         setAssessment(response.data);
       });
   };
+
+  const [user, setUser] = useState({});
+  const token = localStorage.getItem("token");
+
+  const fetchDataUser = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
+      setUser(response.data);
+    });
+  };
+
   useEffect(() => {
+    fetchDataUser();
     fetchData();
   }, []);
 
@@ -132,6 +148,7 @@ function DetailAssessment(props) {
       .post(`http://127.0.0.1:8000/api/assessment/${id_assessment}`, formData)
       .then((response) => {
         console.log("result", response);
+        toast.info(response.data.message);
         fetchData();
       })
       .catch((error) => {
@@ -139,31 +156,32 @@ function DetailAssessment(props) {
       });
   };
 
-  async function ambilData() {
-    let result = await fetch("http://127.0.0.1:8000/api/assessment/" + id_assessment, {
-      method: `GET`,
-    });
-    result = await result.json();
-    setCPMK(result);
-  }
-
   async function hapusData(idHapus) {
     // alert(`Yeee di klik ${id}`);
     let text = "Yakin Ingin Menghapus Data??";
     if (confirm(text) == true) {
-      let result = await fetch(`http://127.0.0.1:8000/api/assessment/delete/${idHapus}`, {
-        method: `DELETE`,
-      });
-
-      result = await result.json();
-      console.warn(result);
-      ambilData();
+      axios
+        .delete(`http://127.0.0.1:8000/api/assessment/delete/${idHapus}`)
+        .then((response) => {
+          console.log("Hapus di sini", response);
+          toast.error(response.data);
+          fetchData();
+        })
+        .catch((error) => {
+          setValidation(error.response);
+        });
     }
   }
 
   return (
     <DashboardLayout>
+      {(() => {
+        if (user.type === "M") {
+          navigate("/");
+        }
+      })()}
       <DashboardNavbar />
+      <ToastContainer />
       <MDBox py={3}>
         <MDBox>
           <Grid container spacing={3}>
@@ -343,7 +361,7 @@ function DetailAssessment(props) {
                               <MDTypography variant="h6"> Total </MDTypography>
                             </DataTableBodyCell>
                             <DataTableBodyCell>
-                              <MDTypography variant="h6"> Ini Totalnya </MDTypography>
+                              <MDTypography variant="h6"> {datas.total} %</MDTypography>
                             </DataTableBodyCell>
                           </TableRow>
                         </TableBody>

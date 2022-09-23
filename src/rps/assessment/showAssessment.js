@@ -101,7 +101,19 @@ function ShowAssessment(props) {
         setIdrps(response.data.course_plan_id);
       });
   };
+
+  const [user, setUser] = useState({});
+  const token = localStorage.getItem("token");
+
+  const fetchDataUser = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
+      setUser(response.data);
+    });
+  };
+
   useEffect(() => {
+    fetchDataUser();
     fetchData();
   }, []);
 
@@ -136,6 +148,11 @@ function ShowAssessment(props) {
 
   return (
     <DashboardLayout>
+      {(() => {
+        if (user.type === "M") {
+          navigate("/");
+        }
+      })()}
       <DashboardNavbar />
       <MDBox py={3}>
         <MDBox>

@@ -52,6 +52,10 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 
+// Notifikasi
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -66,6 +70,7 @@ const style = {
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import data from "layouts/tables/data/authorsTableData";
+import MDAlert from "components/MDAlert";
 
 function withRouter(Component) {
   function ComponentWithRouterProp(props) {
@@ -97,8 +102,18 @@ function CPMK(props) {
         console.warn("data", response.data);
       });
   }
+  const [user, setUser] = useState({});
+  const token = localStorage.getItem("token");
+
+  const fetchDataUser = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
+      setUser(response.data);
+    });
+  };
 
   useEffect(() => {
+    fetchDataUser();
     fetchData();
   }, []);
 
@@ -121,6 +136,8 @@ function CPMK(props) {
   const navigate = useNavigate();
 
   const [validation, setValidation] = useState("");
+  const [notif, setNotif] = useState("");
+  const [alert, setAlert] = useState([]);
 
   const insertHandler = async (e) => {
     e.preventDefault();
@@ -134,6 +151,8 @@ function CPMK(props) {
       .post(`http://127.0.0.1:8000/api/cpmk/${id_cpmk}`, formData)
       .then((response) => {
         console.log("result", response);
+        setNotif(response.data.message);
+        toast.info(response.data.message);
         fetchData();
       })
       .catch((error) => {
@@ -141,31 +160,35 @@ function CPMK(props) {
       });
   };
 
-  async function ambilData() {
-    let result = await fetch("http://127.0.0.1:8000/api/cpmk/" + id_cpmk, {
-      method: `GET`,
-    });
-    result = await result.json();
-    setCPMK(result);
-  }
-
   async function hapusData(idHapus) {
     // alert(`Yeee di klik ${id}`);
     let text = "Yakin Ingin Menghapus Data??";
     if (confirm(text) == true) {
-      let result = await fetch(`http://127.0.0.1:8000/api/cpmk/delete/${idHapus}`, {
-        method: `DELETE`,
-      });
-
-      result = await result.json();
-      console.warn(result);
-      ambilData();
+      axios
+        .delete(`http://127.0.0.1:8000/api/cpmk/delete/${idHapus}`)
+        .then((response) => {
+          console.log("Hapus di sini", response);
+          setNotif(response.data);
+          toast.error(response.data);
+          fetchData();
+        })
+        .catch((error) => {
+          setValidation(error.response.data);
+        });
     }
   }
 
+  const notify = () => toast.info("Berhasil Nambah Data");
+
   return (
     <DashboardLayout>
+      {(() => {
+        if (user.type === "M") {
+          navigate("/");
+        }
+      })()}
       <DashboardNavbar />
+      <ToastContainer />
       <MDBox py={3}>
         <MDBox>
           <Grid container spacing={3}>
@@ -254,11 +277,6 @@ function CPMK(props) {
                                             />
                                           </MDBox>
 
-                                          <MDBox mb={2}>
-                                            <MDTypography>
-                                              <input type="checkbox" /> Sub-CPMK
-                                            </MDTypography>
-                                          </MDBox>
                                           <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
 
                                           <MDBox mt={4} mb={1}>

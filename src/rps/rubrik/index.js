@@ -42,6 +42,7 @@ import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 
 // Link
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 function Rubrik() {
   // Rubrik
@@ -57,12 +58,29 @@ function Rubrik() {
       });
   };
 
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  const fetchDataUser = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
+      setUser(response.data);
+    });
+  };
+
   useEffect(() => {
+    fetchDataUser();
     fetchData();
   }, []);
 
   return (
     <DashboardLayout>
+      {(() => {
+        if (user.type === "M") {
+          navigate("/");
+        }
+      })()}
       <DashboardNavbar />
       <MDBox py={3}>
         <MDBox>
