@@ -188,7 +188,9 @@ function ShowCPMK(props) {
                     </MDBox>
                     <MDBox mb={2}>
                       <MDInput
-                        type="paragraf"
+                        multiline
+                        rows={5}
+                        type="text"
                         label="Kriteria"
                         value={nama}
                         fullWidth

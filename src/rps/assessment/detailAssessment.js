@@ -38,6 +38,7 @@ import axios from "axios";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 
 // DataTable
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
@@ -130,7 +131,7 @@ function DetailAssessment(props) {
   const handleClose = () => setOpen(false);
 
   // Tambah Assessment
-  const [percentage, setPercentage] = useState("");
+  const [percentage, setPercentage] = useState(0);
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
@@ -254,15 +255,6 @@ function DetailAssessment(props) {
                                           <MDBox mb={2}>
                                             <MDInput
                                               type="text"
-                                              label="percentage"
-                                              fullWidth
-                                              value={percentage}
-                                              onChange={(e) => setPercentage(e.target.value)}
-                                            />
-                                          </MDBox>
-                                          <MDBox mb={2}>
-                                            <MDInput
-                                              type="text"
                                               label="name"
                                               fullWidth
                                               value={name}
@@ -318,7 +310,7 @@ function DetailAssessment(props) {
 
                       {assessment.map((datas) => (
                         <TableBody>
-                          {datas.datas.map((asitem) => (
+                          {datas.datas.map((asitem, inde) => (
                             <TableRow>
                               <DataTableBodyCell>
                                 <MDBox
@@ -331,11 +323,22 @@ function DetailAssessment(props) {
                                   {asitem.name}
                                 </MDBox>
                               </DataTableBodyCell>
-                              <DataTableBodyCell>{asitem.percentage} %</DataTableBodyCell>
+                              <DataTableBodyCell>{datas.totalAsses[inde]} %</DataTableBodyCell>
                               <DataTableBodyCell>
+                                <Link to={`/rubrikAssessment/${asitem.id}`}>
+                                  <MDButton
+                                    variant="gradient"
+                                    color="info"
+                                    size="medium"
+                                    iconOnly={true}
+                                  >
+                                    <AccountTreeIcon />
+                                  </MDButton>
+                                </Link>
+                                &nbsp; &nbsp;
                                 <Link to={`/assessment/show/${asitem.id}`}>
                                   <MDButton
-                                    variant="contained"
+                                    variant="gradient"
                                     color="success"
                                     size="medium"
                                     iconOnly={true}
@@ -345,7 +348,7 @@ function DetailAssessment(props) {
                                 </Link>
                                 &nbsp; &nbsp;
                                 <MDButton
-                                  variant="contained"
+                                  variant="gradient"
                                   color="error"
                                   size="medium"
                                   iconOnly={true}

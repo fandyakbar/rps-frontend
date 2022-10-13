@@ -269,6 +269,8 @@ function CPMK(props) {
                                           </MDBox>
                                           <MDBox mb={2}>
                                             <MDInput
+                                              multiline
+                                              rows={5}
                                               type="text"
                                               label="name"
                                               fullWidth
@@ -317,6 +319,9 @@ function CPMK(props) {
                         <DataTableHeadCell component="th" align="center">
                           <MDTypography variant="h6"> Kriteria </MDTypography>
                         </DataTableHeadCell>
+                        <DataTableHeadCell component="th" align="center">
+                          <MDTypography variant="h6"> Bobot CPMK </MDTypography>
+                        </DataTableHeadCell>
 
                         <DataTableHeadCell component="th" align="center">
                           <MDTypography variant="h6"> Aksi </MDTypography>
@@ -325,7 +330,7 @@ function CPMK(props) {
 
                       {cpmk.map((datas) => (
                         <TableBody>
-                          {datas.datas.map((cpmkitem) => (
+                          {datas.datas.map((cpmkitem, ind) => (
                             <TableRow>
                               <DataTableBodyCell>{cpmkitem.code}</DataTableBodyCell>
                               <DataTableBodyCell>
@@ -339,6 +344,8 @@ function CPMK(props) {
                                   {cpmkitem.name}
                                 </MDBox>
                               </DataTableBodyCell>
+
+                              <DataTableBodyCell>{datas.totalcpmk[ind]} %</DataTableBodyCell>
 
                               <DataTableBodyCell>
                                 <Link to={`/cpmk/show/${cpmkitem.id}`}>

@@ -71,6 +71,7 @@ import burceMars from "assets/images/profile.jpg";
 
 import { Card } from "@mui/material";
 
+import DataTable from "examples/Tables/DataTable";
 import MDBadge from "components/MDBadge";
 
 //
@@ -78,6 +79,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 function Overview() {
+  // Data Tabel Manual
+
   // Rubrik
   const [listRPS, setListRPS] = useState([]);
 
@@ -176,24 +179,40 @@ function Overview() {
                   </MDBox>
                 </MDBox>
                 {/* Tabel Mulai */}
+                {/* Data Table */}
+                {/* {listRPS.map((datates) => (
+                  <DataTable
+                    canSearch={true}
+                    table={{
+                      columns: [
+                        { Header: "semester", accessor: "semester", width: "10%" },
+                        { Header: "Kode", accessor: "code", width: "20%" },
+                        { Header: "Nama Mata Kuliah", accessor: "name" },
+                        { Header: "SKS", accessor: "credit", width: "12%" },
+                        { Header: "aksi", axccessor: "aksi", width: "12%" },
+                      ],
+                      rows: datates.rps,
+                    }}
+                  />
+                ))} */}
+
+                {/* DT */}
                 <TableContainer>
                   <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
                     <Table size="small">
                       <TableRow>
+                        <DataTableHeadCell>Semester</DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Code </MDTypography>
+                          Kode
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Nama Mata Kuliah </MDTypography>
+                          Nama Mata Kuliah
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> SKS </MDTypography>
-                        </DataTableHeadCell>
-                        <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Semester </MDTypography>
+                          SKS
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center" alignItems="center">
-                          <MDTypography variant="h6"> Aksi </MDTypography>
+                          Aksi
                         </DataTableHeadCell>
                       </TableRow>
 
@@ -201,10 +220,11 @@ function Overview() {
                         <TableBody>
                           {datas.rps.map((list, indeks) => (
                             <TableRow>
+                              {console.warn("tes dulu", datas.rps)}
+                              <DataTableBodyCell>{list.semester}</DataTableBodyCell>
                               <DataTableBodyCell>{list.code}</DataTableBodyCell>
                               <DataTableBodyCell>{list.name}</DataTableBodyCell>
                               <DataTableBodyCell>{list.credit}</DataTableBodyCell>
-                              <DataTableBodyCell>{list.semester}</DataTableBodyCell>
                               <DataTableBodyCell>
                                 {(() => {
                                   if (datas.checker[indeks] === 100) {

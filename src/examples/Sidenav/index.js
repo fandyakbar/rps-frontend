@@ -49,6 +49,7 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
+import { toast } from "react-toastify";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
@@ -147,13 +148,50 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [expired, setExpired] = useState(localStorage.getItem("expired"));
 
   const fetchData = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
-      setUser(response.data);
-    });
+    await axios
+      .get("http://127.0.0.1:8000/api/auth/me")
+      .then((response) => {
+        setUser(response.data);
+        console.log("waktu expired", expired);
+      })
+      .catch((errorr) => {
+        logoutHandler();
+      });
+  };
+
+  const refreshToken = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+    await axios
+      .post("http://127.0.0.1:8000/api/auth/refresh")
+      .then((response) => {
+        localStorage.setItem("token", response.data.access_token);
+        setToken(response.data.access_token);
+      })
+      .catch((errorr) => {
+        logoutHandler();
+      });
+  };
+
+  const timeout = () => {
+    if (expired) {
+      setTimeout(() => {
+        console.log("tokennya dibaca", token);
+        let text = "Sesi Anda Berakhir, Ingin Melanjutkan??";
+        if (confirm(text) == true) {
+          refreshToken();
+          timeout();
+        } else {
+          console.warn("waktu habis", expired);
+          localStorage.setItem("pesan", "Sesi Anda Telah Habis");
+          logoutHandler();
+        }
+      }, expired);
+    }
   };
 
   useEffect(() => {
@@ -161,6 +199,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       navigate("/authentication/sign-in");
     }
     fetchData();
+    timeout();
   }, []);
 
   const logoutHandler = async () => {
@@ -168,6 +207,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     await axios.post("http://127.0.0.1:8000/api/auth/logout").then(() => {
       localStorage.removeItem("token");
+      localStorage.removeItem("expired");
+      localStorage.setItem("pesans", "Anda Telah Logout");
       navigate("/authentication/sign-in");
     });
   };
@@ -178,6 +219,11 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       variant="permanent"
       ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}
     >
+      {(() => {
+        if (!token) {
+          navigate("/authentication/sign-in");
+        }
+      })()}
       <MDBox pt={3} pb={1} px={4} textAlign="center">
         <MDBox
           display={{ xs: "block", xl: "none" }}

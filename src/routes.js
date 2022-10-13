@@ -38,18 +38,15 @@ Coded by www.creative-tim.com
 // Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
-import Billing from "layouts/billing";
-import RTL from "layouts/rtl";
-import Notifications from "layouts/notifications";
+import CPMK from "rps/cpmk";
+
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
 import Assessment from "rps/assessment";
 import DetailAssessment from "rps/assessment/detailAssessment";
 
 // Komponen Dari fandy
 import Rubrik from "rps/rubrik";
-import CPMK from "rps/cpmk";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -59,6 +56,13 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ShowAssessment from "rps/assessment/showAssessment";
 import ShowCPMK from "rps/cpmk/showCPMK";
 import ShowRubrikDashboard from "rps/dashboard";
+import RubrikAssessment from "rps/assessment/rubrikAssessment";
+import ShowRubrikAssessment from "rps/assessment/showRubrikAssessment";
+import ShowCPMKAssessment from "rps/assessment/showCPMKAssessment";
+import Task from "rps/taks";
+import ShowTask from "rps/taks/showTask";
+import EditTask from "rps/taks/editTask";
+import PDF from "rps/dashboard/pdf";
 
 const routes = [
   {
@@ -72,21 +76,21 @@ const routes = [
 
   {
     type: "collapse",
-    name: "CPMK",
-    key: "cpmk",
-    icon: <Icon fontSize="small">bookmarks</Icon>,
-    route: "/cpmk",
-    component: <Tables />,
-  },
-
-  {
-    type: "collapse",
     name: "Assessment Penilaian",
     key: "assessment",
     icon: <Icon fontSize="small">calculate</Icon>,
     route: "/assessment",
     component: <Assessment />,
   },
+  {
+    type: "collapse",
+    name: "Tugas",
+    key: "task",
+    icon: <Icon fontSize="small">task</Icon>,
+    route: "/task",
+    component: <Task />,
+  },
+
   {
     type: "collapse",
     name: "Rubrik",
@@ -106,18 +110,9 @@ const routes = [
   },
 
   {
-    type: "lamandetail",
-    name: "cpmk_detail",
-    key: "cpmk",
-    icon: <Icon fontSize="small">Haha</Icon>,
-    route: "/cpmk_detail/:id",
-    component: <CPMK />,
-  },
-
-  {
-    type: "lamandetail",
-    name: "cpmk_detail",
-    key: "cpmk",
+    type: "anak",
+    name: "assessment_detail",
+    key: "assessment",
     icon: <Icon fontSize="small">Haha</Icon>,
     route: "/assessment_detail/:id",
     component: <DetailAssessment />,
@@ -140,6 +135,7 @@ const routes = [
     route: "/dashboard/:id",
     component: <ShowRubrikDashboard />,
   },
+
   {
     type: "lamandetailrps",
     name: "myrps",
@@ -166,6 +162,77 @@ const routes = [
     route: "/cpmk/show/:id",
     component: <ShowCPMK />,
   },
+
+  {
+    type: "rubrikAssessment",
+    name: "rubrikAssessment",
+    key: "rubrikAssessment",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/rubrikAssessment/:id",
+    component: <RubrikAssessment />,
+  },
+
+  {
+    type: "rubrikAssessmentShow",
+    name: "rubrikAssessmentShow",
+    key: "rubrikAssessmentShow",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/rubrikAssessment/show/:id",
+    component: <ShowRubrikAssessment />,
+  },
+
+  {
+    type: "rubrikCPMKAssessmentShow",
+    name: "rubrikCPMKAssessmentShow",
+    key: "rubrikCPMKAssessmentShow",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/rubrikAssessment/cpmk/:id",
+    component: <ShowCPMKAssessment />,
+  },
+
+  {
+    type: "showTask",
+    name: "showTask",
+    key: "showTask",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/task/:id",
+    component: <ShowTask />,
+  },
+
+  {
+    type: "editTask",
+    name: "editTask",
+    key: "editTask",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/task/show/:id",
+    component: <EditTask />,
+  },
+  {
+    type: "pdf",
+    name: "pdf",
+    key: "pdf",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/pdf/:id",
+    component: <PDF />,
+  },
 ];
 
 export default routes;
+
+// {
+//   type: "collapse",
+//   name: "CPMK",
+//   key: "cpmk",
+//   icon: <Icon fontSize="small">bookmarks</Icon>,
+//   route: "/cpmk",
+//   component: <Tables />,
+// },
+
+// {
+//   type: "lamandetail",
+//   name: "cpmk_detail",
+//   key: "cpmk",
+//   icon: <Icon fontSize="small">Haha</Icon>,
+//   route: "/cpmk_detail/:id",
+//   component: <CPMK />,
+// },

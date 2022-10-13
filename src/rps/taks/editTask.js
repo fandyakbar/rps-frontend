@@ -78,32 +78,45 @@ function withRouter(Component) {
   return ComponentWithRouterProp;
 }
 
-function ShowAssessment(props) {
+function EditTask(props) {
   // console.warn("props", props.router.params.id);
 
   // cpmk
-  const [assessment, setAssessment] = useState([]);
-  const [penilaian, setPenilaian] = useState([]);
-  const [presentase, setPresentase] = useState(0);
+  const [cpmk, setCpmk] = useState([]);
+  const [nama, setNama] = useState([]);
+  const [kode, setKode] = useState([]);
   const [idrps, setIdrps] = useState([]);
+
+  // Task
+  const [name, setName] = useState("");
+  const [theme, setTheme] = useState("");
+  const [description, setDescription] = useState("");
+  const [step, setStep] = useState("");
+  const [output, setOutput] = useState("");
+  const [member, setMember] = useState(0);
 
   const { size } = typography;
 
-  const id_assessment = props.router.params.id;
+  const id_task = props.router.params.id;
 
   const fetchData = async () => {
     await axios
-      .get(`http://127.0.0.1:8000/api/assessment/show/${id_assessment}`)
+      .get(`http://127.0.0.1:8000/api/task/show/${id_task}`)
 
       .then((response) => {
-        setPenilaian(response.data.name);
-        setPresentase(response.data.percentage);
+        setName(response.data.name);
+        setTheme(response.data.theme);
+        setDescription(response.data.description);
+        setStep(response.data.step);
+        setOutput(response.data.output);
+        setMember(response.data.member);
         setIdrps(response.data.course_plan_id);
       });
   };
 
   const [user, setUser] = useState({});
   const token = localStorage.getItem("token");
+  const [validation, setValidation] = useState("");
 
   const fetchDataUser = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -117,7 +130,13 @@ function ShowAssessment(props) {
     fetchData();
   }, []);
 
-  console.warn("di sini cek", idrps);
+  // console.warn("di sini cek", idrps);
+
+  // cpmk.map((datas)=>{
+  //   const matkul = datas.matkul
+  //   // console.warn("matkul", matkul);
+  //   }
+  // )
 
   const navigate = useNavigate();
 
@@ -126,14 +145,18 @@ function ShowAssessment(props) {
 
     const formData = new FormData();
 
-    formData.append("presentase", presentase);
-    formData.append("penilaian", penilaian);
+    formData.append("name", name);
+    formData.append("theme", theme);
+    formData.append("description", description);
+    formData.append("step", step);
+    formData.append("output", output);
+    formData.append("member", member);
 
     await axios
-      .post(`http://127.0.0.1:8000/api/assessment/show/${id_assessment}`, formData)
+      .post(`http://127.0.0.1:8000/api/task/show/${id_task}`, formData)
       .then((response) => {
         console.log("result", response);
-        navigate(`/assessment_detail/${idrps}`);
+        navigate(`/task/${idrps}`);
       })
       .catch((error) => {
         setValidation(error.response.data);
@@ -151,7 +174,7 @@ function ShowAssessment(props) {
       <MDBox py={3}>
         <MDBox>
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={8}>
               {/* Isinya Tarok Di sini */}
               <Card>
                 <MDBox
@@ -166,7 +189,7 @@ function ShowAssessment(props) {
                 >
                   <MDBox>
                     <MDTypography variant="h6" color="white">
-                      Edit Assessment
+                      Edit Penugasan
                     </MDTypography>
                   </MDBox>
                 </MDBox>
@@ -176,9 +199,63 @@ function ShowAssessment(props) {
                     <MDBox mb={2}>
                       <MDInput
                         type="text"
-                        label="Penilaian"
-                        value={penilaian}
-                        onChange={(e) => setPenilaian(e.target.value)}
+                        label="name"
+                        fullWidth
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </MDBox>
+
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="theme"
+                        fullWidth
+                        value={theme}
+                        onChange={(e) => setTheme(e.target.value)}
+                      />
+                    </MDBox>
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        multiline
+                        rows={2}
+                        label="Deskripsi"
+                        fullWidth
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                    </MDBox>
+
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        multiline
+                        rows={3}
+                        label="Langkah"
+                        fullWidth
+                        value={step}
+                        onChange={(e) => setStep(e.target.value)}
+                      />
+                    </MDBox>
+
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="Output"
+                        fullWidth
+                        value={output}
+                        onChange={(e) => setOutput(e.target.value)}
+                      />
+                    </MDBox>
+
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="number"
+                        label="Jumlah Anggota"
+                        fullWidth
+                        value={member}
+                        onChange={(e) => setMember(e.target.value)}
                       />
                     </MDBox>
 
@@ -186,7 +263,7 @@ function ShowAssessment(props) {
 
                     <MDBox mt={4} mb={1}>
                       <MDButton type="submit" variant="gradient" color="info">
-                        submit
+                        Submit
                       </MDButton>
                     </MDBox>
                     <MDBox mt={3} mb={1} textAlign="center"></MDBox>
@@ -202,4 +279,4 @@ function ShowAssessment(props) {
   );
 }
 
-export default withRouter(ShowAssessment);
+export default withRouter(EditTask);

@@ -81,6 +81,9 @@ function Basic() {
 
   const [validation, setValidation] = useState("");
 
+  const pesan = localStorage.getItem("pesan");
+  const pesans = localStorage.getItem("pesans");
+
   const navigate = useNavigate();
 
   const loginHandler = async (e) => {
@@ -95,6 +98,7 @@ function Basic() {
       .post("http://127.0.0.1:8000/api/auth/login", formData)
       .then((response) => {
         localStorage.setItem("token", response.data.access_token);
+        localStorage.setItem("expired", response.data.expires_in);
         console.log("result", response);
 
         navigate("/");
@@ -108,6 +112,15 @@ function Basic() {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/dashboard");
+    }
+
+    if (pesan) {
+      toast.warning("Sesi Anda Berakhir");
+      localStorage.removeItem("pesan");
+    }
+    if (pesans) {
+      toast.warning("Anda Telah Logout");
+      localStorage.removeItem("pesans");
     }
   });
 

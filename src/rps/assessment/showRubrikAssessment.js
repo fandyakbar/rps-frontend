@@ -78,27 +78,34 @@ function withRouter(Component) {
   return ComponentWithRouterProp;
 }
 
-function ShowAssessment(props) {
+function ShowRubrikAssessment(props) {
   // console.warn("props", props.router.params.id);
 
   // cpmk
-  const [assessment, setAssessment] = useState([]);
-  const [penilaian, setPenilaian] = useState([]);
-  const [presentase, setPresentase] = useState(0);
-  const [idrps, setIdrps] = useState([]);
+  const [cpmk, setCpmk] = useState([]);
+  const [criteria, setCriteria] = useState([]);
+  const [inferior, setInferior] = useState([]);
+  const [average, setAverage] = useState([]);
+  const [good, setGood] = useState([]);
+  const [Excellent, setExcellent] = useState([]);
+
+  const [idAssessment, setIdAssessment] = useState([]);
 
   const { size } = typography;
 
-  const id_assessment = props.router.params.id;
+  const id_detail = props.router.params.id;
 
   const fetchData = async () => {
     await axios
-      .get(`http://127.0.0.1:8000/api/assessment/show/${id_assessment}`)
+      .get(`http://127.0.0.1:8000/api/rubrikassessment/show/${id_detail}`)
 
       .then((response) => {
-        setPenilaian(response.data.name);
-        setPresentase(response.data.percentage);
-        setIdrps(response.data.course_plan_id);
+        setCriteria(response.data.criteria);
+        setInferior(response.data.inferior);
+        setAverage(response.data.average);
+        setGood(response.data.good);
+        setExcellent(response.data.Excellent);
+        setIdAssessment(response.data.course_plan_assessment_id);
       });
   };
 
@@ -111,13 +118,18 @@ function ShowAssessment(props) {
       setUser(response.data);
     });
   };
-
   useEffect(() => {
     fetchDataUser();
     fetchData();
   }, []);
 
-  console.warn("di sini cek", idrps);
+  // console.warn("di sini cek", idrps);
+
+  // cpmk.map((datas)=>{
+  //   const matkul = datas.matkul
+  //   // console.warn("matkul", matkul);
+  //   }
+  // )
 
   const navigate = useNavigate();
 
@@ -126,14 +138,17 @@ function ShowAssessment(props) {
 
     const formData = new FormData();
 
-    formData.append("presentase", presentase);
-    formData.append("penilaian", penilaian);
+    formData.append("criteria", criteria);
+    formData.append("inferior", inferior);
+    formData.append("average", average);
+    formData.append("good", good);
+    formData.append("Excellent", Excellent);
 
     await axios
-      .post(`http://127.0.0.1:8000/api/assessment/show/${id_assessment}`, formData)
+      .post(`http://127.0.0.1:8000/api/rubrikassessment/show/${id_detail}`, formData)
       .then((response) => {
         console.log("result", response);
-        navigate(`/assessment_detail/${idrps}`);
+        navigate(`/rubrikassessment/${idAssessment}`);
       })
       .catch((error) => {
         setValidation(error.response.data);
@@ -166,7 +181,7 @@ function ShowAssessment(props) {
                 >
                   <MDBox>
                     <MDTypography variant="h6" color="white">
-                      Edit Assessment
+                      Edit CPMK
                     </MDTypography>
                   </MDBox>
                 </MDBox>
@@ -176,12 +191,55 @@ function ShowAssessment(props) {
                     <MDBox mb={2}>
                       <MDInput
                         type="text"
-                        label="Penilaian"
-                        value={penilaian}
-                        onChange={(e) => setPenilaian(e.target.value)}
+                        label="Kriteria"
+                        value={criteria}
+                        onChange={(e) => setCriteria(e.target.value)}
                       />
                     </MDBox>
-
+                    <MDBox mb={2}>
+                      <MDInput
+                        multiline
+                        rows={2}
+                        type="text"
+                        label="Inferior"
+                        value={inferior}
+                        fullWidth
+                        onChange={(e) => setInferior(e.target.value)}
+                      />
+                    </MDBox>
+                    <MDBox mb={2}>
+                      <MDInput
+                        multiline
+                        rows={2}
+                        type="text"
+                        label="Average"
+                        value={average}
+                        fullWidth
+                        onChange={(e) => setAverage(e.target.value)}
+                      />
+                    </MDBox>
+                    <MDBox mb={2}>
+                      <MDInput
+                        multiline
+                        rows={2}
+                        type="text"
+                        label="Good"
+                        value={good}
+                        fullWidth
+                        onChange={(e) => setGood(e.target.value)}
+                      />
+                    </MDBox>
+                    <MDBox mb={2}>
+                      <MDInput
+                        multiline
+                        rows={2}
+                        type="text"
+                        label="Excellent"
+                        value={Excellent}
+                        fullWidth
+                        onChange={(e) => setExcellent(e.target.value)}
+                      />
+                    </MDBox>
                     <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
 
                     <MDBox mt={4} mb={1}>
@@ -202,4 +260,4 @@ function ShowAssessment(props) {
   );
 }
 
-export default withRouter(ShowAssessment);
+export default withRouter(ShowRubrikAssessment);

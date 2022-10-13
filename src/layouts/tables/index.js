@@ -95,16 +95,16 @@ function Tables() {
                     <Table size="small">
                       <TableRow>
                         <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Code </MDTypography>
+                          <MDTypography variant="h6"> Semester </MDTypography>
+                        </DataTableHeadCell>
+                        <DataTableHeadCell component="th" align="center">
+                          <MDTypography variant="h6"> Kode </MDTypography>
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
                           <MDTypography variant="h6"> Nama Mata Kuliah </MDTypography>
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
                           <MDTypography variant="h6"> SKS </MDTypography>
-                        </DataTableHeadCell>
-                        <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Semester </MDTypography>
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
                           <MDTypography variant="h6"> Aksi </MDTypography>
@@ -114,10 +114,10 @@ function Tables() {
                       <TableBody>
                         {listRubrik.map((list) => (
                           <TableRow>
+                            <DataTableBodyCell>{list.semester}</DataTableBodyCell>
                             <DataTableBodyCell>{list.code}</DataTableBodyCell>
                             <DataTableBodyCell>{list.name}</DataTableBodyCell>
                             <DataTableBodyCell>{list.credit}</DataTableBodyCell>
-                            <DataTableBodyCell>{list.semester}</DataTableBodyCell>
                             <DataTableBodyCell>
                               <Link to={`/cpmk_detail/${list.course_plan_id}`}>
                                 <MDButton

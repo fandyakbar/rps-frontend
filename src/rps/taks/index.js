@@ -42,14 +42,16 @@ import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 
 // Link
 import { Link } from "react-router-dom";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-function Rubrik() {
+function Task() {
   // Rubrik
   const [listRubrik, setlistRubrik] = useState([]);
   const { size } = typography;
+  const token = localStorage.getItem("token");
 
   const fetchData = async () => {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     await axios
       .get("http://127.0.0.1:8000/api/listrubrik")
 
@@ -58,29 +60,12 @@ function Rubrik() {
       });
   };
 
-  const [user, setUser] = useState({});
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  const fetchDataUser = async () => {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    await axios.get("http://127.0.0.1:8000/api/auth/me").then((response) => {
-      setUser(response.data);
-    });
-  };
-
   useEffect(() => {
-    fetchDataUser();
     fetchData();
   }, []);
 
   return (
     <DashboardLayout>
-      {(() => {
-        if (user.type === "M") {
-          navigate("/");
-        }
-      })()}
       <DashboardNavbar />
       <MDBox py={3}>
         <MDBox>
@@ -99,7 +84,7 @@ function Rubrik() {
                   coloredShadow="info"
                 >
                   <MDTypography variant="h6" color="white">
-                    Rubrik Penilaian RPS
+                    Capaian Mata Kuliah RPS
                   </MDTypography>
                 </MDBox>
 
@@ -113,7 +98,7 @@ function Rubrik() {
                           <MDTypography variant="h6"> Semester </MDTypography>
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Code </MDTypography>
+                          <MDTypography variant="h6"> Kode </MDTypography>
                         </DataTableHeadCell>
                         <DataTableHeadCell component="th" align="center">
                           <MDTypography variant="h6"> Nama Mata Kuliah </MDTypography>
@@ -134,7 +119,7 @@ function Rubrik() {
                             <DataTableBodyCell>{list.name}</DataTableBodyCell>
                             <DataTableBodyCell>{list.credit}</DataTableBodyCell>
                             <DataTableBodyCell>
-                              <Link to={"/rubrik_detail/" + list.course_plan_id}>
+                              <Link to={`/task/${list.course_plan_id}`}>
                                 <MDButton
                                   variant="gradient"
                                   color="info"
@@ -163,4 +148,4 @@ function Rubrik() {
   );
 }
 
-export default Rubrik;
+export default Task;
