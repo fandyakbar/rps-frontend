@@ -93,6 +93,14 @@ function ShowRubrikAssessment(props) {
 
   const { size } = typography;
 
+  const [validation, setValidation] = useState("");
+
+  const [cpmkArray, setCpmkArray] = useState({
+    cpmkid: [],
+  });
+
+  console.log("tescpmknya", cpmkArray.cpmkid);
+
   const id_detail = props.router.params.id;
 
   const fetchData = async () => {
@@ -106,6 +114,28 @@ function ShowRubrikAssessment(props) {
         setGood(response.data.good);
         setExcellent(response.data.Excellent);
         setIdAssessment(response.data.course_plan_assessment_id);
+        fetchDatas(response.data.course_plan_assessment_id);
+      });
+  };
+
+  const fetchDatass = async () => {
+    const { cpmkid } = cpmkArray;
+    await axios
+      .get(`http://127.0.0.1:8000/api/rubrikassessment/shows/${id_detail}`)
+
+      .then((response) => {
+        setCpmkArray({
+          cpmkid: response.data,
+        });
+      });
+  };
+
+  const fetchDatas = async (idcepat) => {
+    await axios
+      .get(`http://127.0.0.1:8000/api/rubrikassessment/${idcepat}`)
+
+      .then((response) => {
+        setCpmk(response.data);
       });
   };
 
@@ -121,17 +151,22 @@ function ShowRubrikAssessment(props) {
   useEffect(() => {
     fetchDataUser();
     fetchData();
+    fetchDatass();
+    fetchDatas(idAssessment);
   }, []);
 
-  // console.warn("di sini cek", idrps);
-
-  // cpmk.map((datas)=>{
-  //   const matkul = datas.matkul
-  //   // console.warn("matkul", matkul);
-  //   }
-  // )
-
   const navigate = useNavigate();
+
+  function ischecked(idcpmk, indeksss) {
+    for (let index = 0; index < cpmkArray.cpmkid.length; index++) {
+      if (idcpmk == cpmkArray.cpmkid[index]) {
+        return true;
+        break;
+      }
+    }
+
+    return false;
+  }
 
   const updateHandler = async (e) => {
     e.preventDefault();
@@ -144,6 +179,10 @@ function ShowRubrikAssessment(props) {
     formData.append("good", good);
     formData.append("Excellent", Excellent);
 
+    cpmkArray.cpmkid.map((listcpmk, indess) => {
+      formData.append(`listcpmk[${indess}]`, listcpmk);
+    });
+
     await axios
       .post(`http://127.0.0.1:8000/api/rubrikassessment/show/${id_detail}`, formData)
       .then((response) => {
@@ -152,6 +191,7 @@ function ShowRubrikAssessment(props) {
       })
       .catch((error) => {
         setValidation(error.response.data);
+        console.warn("response eror", error.response.data);
       });
   };
 
@@ -181,7 +221,7 @@ function ShowRubrikAssessment(props) {
                 >
                   <MDBox>
                     <MDTypography variant="h6" color="white">
-                      Edit CPMK
+                      Edit Kriteria
                     </MDTypography>
                   </MDBox>
                 </MDBox>
@@ -196,50 +236,40 @@ function ShowRubrikAssessment(props) {
                         onChange={(e) => setCriteria(e.target.value)}
                       />
                     </MDBox>
-                    <MDBox mb={2}>
-                      <MDInput
-                        multiline
-                        rows={2}
-                        type="text"
-                        label="Inferior"
-                        value={inferior}
-                        fullWidth
-                        onChange={(e) => setInferior(e.target.value)}
-                      />
-                    </MDBox>
-                    <MDBox mb={2}>
-                      <MDInput
-                        multiline
-                        rows={2}
-                        type="text"
-                        label="Average"
-                        value={average}
-                        fullWidth
-                        onChange={(e) => setAverage(e.target.value)}
-                      />
-                    </MDBox>
-                    <MDBox mb={2}>
-                      <MDInput
-                        multiline
-                        rows={2}
-                        type="text"
-                        label="Good"
-                        value={good}
-                        fullWidth
-                        onChange={(e) => setGood(e.target.value)}
-                      />
-                    </MDBox>
-                    <MDBox mb={2}>
-                      <MDInput
-                        multiline
-                        rows={2}
-                        type="text"
-                        label="Excellent"
-                        value={Excellent}
-                        fullWidth
-                        onChange={(e) => setExcellent(e.target.value)}
-                      />
-                    </MDBox>
+
+                    {cpmk.map((datas) => (
+                      <MDBox>
+                        {datas.cpmk.map((inputcpmk, indeknya) => (
+                          <TableRow>
+                            <TableCell>
+                              <div className="form-check form-switch">
+                                <input
+                                  className="form-check-input"
+                                  type="Checkbox"
+                                  value={inputcpmk.cpmk_id}
+                                  defaultChecked={ischecked(inputcpmk.cpmk_id, indeknya)}
+                                  onChange={(e) => {
+                                    const { cpmkid } = cpmkArray;
+                                    if (e.target.checked) {
+                                      setCpmkArray({
+                                        cpmkid: [...cpmkid, inputcpmk.cpmk_id],
+                                      });
+                                    } else {
+                                      setCpmkArray({
+                                        cpmkid: cpmkid.filter((e) => e !== inputcpmk.cpmk_id),
+                                      });
+                                    }
+                                  }}
+                                  fullWidth
+                                />
+                                ({inputcpmk.code}) {inputcpmk.name}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </MDBox>
+                    ))}
+
                     <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
 
                     <MDBox mt={4} mb={1}>

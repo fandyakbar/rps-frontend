@@ -85,6 +85,7 @@ import data from "layouts/tables/data/authorsTableData";
 import { List } from "@mui/material";
 import Kop from "assets/images/logo-ct.png";
 import { convertLength } from "@mui/material/styles/cssUtils";
+import { TableRows } from "@mui/icons-material";
 
 function withRouter(Component) {
   function ComponentWithRouterProp(props) {
@@ -219,251 +220,379 @@ function ShowRubrikDashboard(props) {
                           <Grid container spacing={3}>
                             <Grid item xs={12} md={6} lg={11}>
                               <MDTypography variant="h6" color="white">
-                                Rubrik {mk.name}
+                                RPS Mata Kuliah {mk.name}
                               </MDTypography>
-                            </Grid>
-
-                            <Grid item xs={12} md={6} lg={1}>
-                              <MDBox px={4} align="right">
-                                {detailData.map((datass) => (
-                                  <MDButton
-                                    variant="contained"
-                                    color="light"
-                                    size="medium"
-                                    iconOnly={true}
-                                    onClick={() => {
-                                      toast.info("Sedang Memuat PDF");
-                                      const doc = new jsPDF();
-                                      var width = doc.internal.pageSize.getWidth();
-
-                                      let img = new Image();
-
-                                      img.src = Kop;
-
-                                      doc.addImage(img, "png", width / 2 - 19, 0, 38, 39);
-
-                                      doc.setFontSize(12);
-                                      var text = "RENCANA PEMBELAJARAN SEMESTER",
-                                        xOffset = width / 2 - 40;
-                                      doc.text(text, xOffset, 50);
-
-                                      doc.setFontSize(9);
-                                      doc.text("mata kuliah: " + mk.name, 20, 60);
-                                      doc.text("semester: " + mk.semester, 20, 65);
-                                      doc.text("SKS: " + mk.credit, 20, 70);
-
-                                      doc.text("Dosen Pengampu :", width - 60, 60);
-                                      datas.namaDosen.map((namdos, index) => {
-                                        doc.text(namdos, width - 60, 65 + index * 5);
-                                      });
-                                      doc.setFontSize(12);
-                                      doc.text("Bagian 1 Tabel Rencana Assessment", 20, 90);
-
-                                      autoTable(doc, {
-                                        startY: 95,
-                                        head: [datas.kolomPDF],
-                                        body: datas.tabelPDF,
-                                        margin: { top: 25, bottom: 15 },
-                                        styles: { overflow: "linebreak", fontSize: 8 },
-                                        showHeader: "everyPage",
-                                        theme: "grid",
-                                      });
-
-                                      tasks.tugas.map((tasknya, indexy) => {
-                                        doc.addPage();
-                                        doc.setFontSize(12);
-                                        doc.text("Bagian 2 Penugasan Mata Kuliah", 20, 20);
-                                        doc.text(tasknya.name, 20, 30);
-
-                                        doc.setFontSize(10);
-                                        autoTable(doc, {
-                                          startY: 40,
-                                          head: [["Tema"]],
-                                          body: [[tasknya.theme]],
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-
-                                        let datacpmk = [];
-
-                                        datas.cpmk.map((itemcpmk, index) => {
-                                          datacpmk[index] = [
-                                            "(" + itemcpmk.code + ") " + itemcpmk.name,
-                                          ];
-                                        });
-
-                                        autoTable(doc, {
-                                          startY: 65,
-                                          head: [["CPMK yang Hendak Dicapai"]],
-                                          body: datacpmk,
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-
-                                        autoTable(doc, {
-                                          startY: 140,
-                                          head: [["Deskripsi"]],
-                                          body: [[tasknya.description]],
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-
-                                        autoTable(doc, {
-                                          startY: 160,
-                                          head: [["Langkah Pengerjaan"]],
-                                          body: [[tasknya.step]],
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-
-                                        autoTable(doc, {
-                                          startY: 220,
-                                          head: [["Luaran Tugas"]],
-                                          body: [[tasknya.output]],
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-                                      });
-
-                                      datass.assessment.map((detailAs, index) => {
-                                        doc.addPage();
-                                        doc.setFontSize(12);
-                                        doc.text("Bagian 3 Rubrik Penilaian", 20, 20);
-
-                                        autoTable(doc, {
-                                          startY: 30,
-                                          head: [[detailAs.name]],
-                                          body: [
-                                            ["Nomor Kelompok"],
-                                            ["Nama (NIM) Anggota"],
-                                            ["1. \n2. \n3."],
-                                          ],
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-
-                                        let datacpmk2 = [];
-
-                                        datass.cpmk[index].map((cpmknya, inss) => {
-                                          datacpmk2[inss] = [
-                                            "(" + cpmknya.code + ") " + cpmknya.name,
-                                          ];
-                                        });
-
-                                        autoTable(doc, {
-                                          startY: 75,
-                                          head: [["CPMK yang Diases"]],
-                                          body: datacpmk2,
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-
-                                        let dataKriteria = [];
-                                        let codecpmk = [];
-                                        let codecpmkDisplay = [];
-
-                                        datass.datas[index].map((kriteria, insk) => {
-                                          datass.cpmkcode[index].map((cpmkcodess, indexks) => {
-                                            codecpmk[indexks] = cpmkcodess.code;
-                                          });
-                                          codecpmkDisplay[insk] = codecpmk;
-                                          dataKriteria[insk] = [
-                                            codecpmk,
-                                            kriteria.criteria,
-                                            kriteria.inferior,
-                                            kriteria.average,
-                                            kriteria.good,
-                                            kriteria.Excellent,
-                                          ];
-                                        });
-
-                                        autoTable(doc, {
-                                          startY: 145,
-                                          head: [
-                                            [
-                                              "CP-MK",
-                                              "Kriteria",
-                                              "Inferior",
-                                              "Average",
-                                              "Good",
-                                              "Excellent",
-                                            ],
-                                          ],
-                                          body: dataKriteria,
-                                          margin: { top: 25, bottom: 15 },
-                                          styles: { overflow: "linebreak", fontSize: 8 },
-                                          showHeader: "everyPage",
-                                          theme: "grid",
-                                        });
-                                      });
-
-                                      doc.save("rubrik-" + mk.name + ".pdf");
-                                    }}
-                                  >
-                                    <PrintIcon />
-                                  </MDButton>
-                                ))}
-                              </MDBox>
                             </Grid>
                           </Grid>
                         ))}
                       </div>
                     </MDBox>
 
+                    <MDBox p={2}>
+                      {(() => {
+                        if (user.type != "M") {
+                          return (
+                            <>
+                              <Link to={`/assessment_detail/${id_course}`}>
+                                <MDButton variant="gradient" color="success" size="medium">
+                                  <Icon fontSize="small">calculate</Icon> &nbsp; Assessment
+                                </MDButton>
+                              </Link>
+                              &nbsp;
+                              <Link to={`/task/${id_course}`}>
+                                <MDButton variant="gradient" color="success" size="medium">
+                                  <Icon fontSize="small">task</Icon> &nbsp; Tugas
+                                </MDButton>
+                              </Link>
+                              &nbsp;
+                              <Link to={`/rubrik_detail/${id_course}`}>
+                                <MDButton variant="gradient" color="success" size="medium">
+                                  <Icon fontSize="small">vertical_split</Icon> &nbsp; Komponen
+                                  Penilaian
+                                </MDButton>
+                              </Link>
+                            </>
+                          );
+                        }
+                      })()}
+                      &nbsp;
+                      {detailData.map((datass) => (
+                        <MDButton
+                          variant="gradient"
+                          color="warning"
+                          size="medium"
+                          onClick={() => {
+                            toast.info("Sedang Memuat PDF");
+                            const doc = new jsPDF();
+                            var width = doc.internal.pageSize.getWidth();
+                            var height = doc.internal.pageSize.getHeight();
+
+                            let img = new Image();
+                            img.src = Kop;
+
+                            doc.addImage(img, "png", width / 2 - 19, height / 2 - 40, 38, 39);
+
+                            doc.setFontSize(18);
+
+                            var text = "RENCANA PEMBELAJARAN SEMESTER",
+                              xOffset = width / 2;
+                            doc.text(text, xOffset, 30, { align: "center" });
+                            doc.text("(RPS)", xOffset, 40, { align: "center" });
+
+                            datas.matkul.map((mk) => {
+                              doc.setFontSize(16);
+                              doc.text(mk.name, width / 2, 80, { align: "center" });
+
+                              var semesterdansks =
+                                "(" + mk.credit + " SKS) Semester " + mk.semester;
+                              doc.text(semesterdansks, width / 2, 90, {
+                                align: "center",
+                              });
+
+                              var textHeight = height / 2 + 25;
+
+                              doc.setFontSize(12);
+
+                              doc.text("Oleh :", width / 2, textHeight, { align: "center" });
+                              datas.namaDosen.map((namdos, index) => {
+                                doc.text(namdos, width / 2, textHeight + (index + 1) * 7, {
+                                  align: "center",
+                                });
+                              });
+
+                              doc.setFontSize(14);
+                              doc.text("DEPARTEMEN SISTEM INFORMASI", xOffset, height - 60, {
+                                align: "center",
+                              });
+                              doc.text("FAKULTAS TEKNOLOGI INFORMASI", xOffset, height - 50, {
+                                align: "center",
+                              });
+                              doc.text("UNIVERSITAS ANDALAS", xOffset, height - 40, {
+                                align: "center",
+                              });
+                              doc.text("PADANG, 2022", xOffset, height - 30, { align: "center" });
+
+                              doc.addPage();
+
+                              let cpmkMatkul = [];
+
+                              datas.cpmk.map((itemcpmk, index) => {
+                                cpmkMatkul[index] = [
+                                  "(" + itemcpmk.code + ") " + itemcpmk.name,
+                                  datas.totalcpmk[index] + "%",
+                                ];
+                              });
+
+                              autoTable(doc, {
+                                startY: 30,
+                                head: [["Daftar CP Mata Kuliah", "Bobot"]],
+                                body: cpmkMatkul,
+                                margin: { top: 25, bottom: 15 },
+                                styles: { overflow: "linebreak", fontSize: 8 },
+                                showHeader: "everyPage",
+                                theme: "grid",
+                              });
+
+                              doc.setFontSize(12);
+                              doc.text("Bagian 1 Tabel Rencana Assessment", width / 2, 110, {
+                                align: "center",
+                              });
+
+                              autoTable(doc, {
+                                startY: 115,
+                                head: [datas.kolomPDF],
+                                body: datas.tabelPDF,
+                                margin: { top: 25, bottom: 15 },
+                                styles: { overflow: "linebreak", fontSize: 8 },
+                                showHeader: "everyPage",
+                                theme: "grid",
+                              });
+
+                              tasks.tugas.map((tasknya, indexy) => {
+                                doc.addPage();
+                                doc.setFontSize(12);
+                                doc.text("Bagian 2 Penugasan Mata Kuliah", width / 2, 20, {
+                                  align: "center",
+                                });
+                                doc.text(tasknya.name, width / 2, 30, { align: "center" });
+
+                                doc.setFontSize(10);
+                                autoTable(doc, {
+                                  startY: 40,
+                                  head: [["Tema"]],
+                                  body: [[tasknya.theme]],
+                                  margin: { top: 25, bottom: 15 },
+                                  styles: { overflow: "linebreak", fontSize: 8 },
+                                  showHeader: "everyPage",
+                                  theme: "grid",
+                                });
+
+                                let datacpmk = [];
+
+                                datas.cpmk.map((itemcpmk, index) => {
+                                  datacpmk[index] = ["(" + itemcpmk.code + ") " + itemcpmk.name];
+                                });
+
+                                autoTable(doc, {
+                                  startY: 65,
+                                  head: [["CPMK yang Hendak Dicapai"]],
+                                  body: datacpmk,
+                                  margin: { top: 25, bottom: 15 },
+                                  styles: { overflow: "linebreak", fontSize: 8 },
+                                  showHeader: "everyPage",
+                                  theme: "grid",
+                                });
+
+                                autoTable(doc, {
+                                  startY: 135,
+                                  head: [["Deskripsi"]],
+                                  body: [[tasknya.description]],
+                                  margin: { top: 25, bottom: 15 },
+                                  styles: { overflow: "linebreak", fontSize: 8 },
+                                  showHeader: "everyPage",
+                                  theme: "grid",
+                                });
+
+                                autoTable(doc, {
+                                  startY: 190,
+                                  head: [["Langkah Pengerjaan"]],
+                                  body: [[tasknya.step]],
+                                  margin: { top: 25, bottom: 15 },
+                                  styles: { overflow: "linebreak", fontSize: 8 },
+                                  showHeader: "everyPage",
+                                  theme: "grid",
+                                });
+
+                                autoTable(doc, {
+                                  startY: 240,
+                                  head: [["Luaran Tugas"]],
+                                  body: [[tasknya.output]],
+                                  margin: { top: 25, bottom: 15 },
+                                  styles: { overflow: "linebreak", fontSize: 8 },
+                                  showHeader: "everyPage",
+                                  theme: "grid",
+                                });
+                              });
+
+                              datass.assessment.map((detailAs, index) => {
+                                doc.addPage();
+                                doc.setFontSize(12);
+                                doc.text("Bagian 3 Rubrik Penilaian", width / 2, 20, {
+                                  align: "center",
+                                });
+
+                                if (detailAs.flag == 1) {
+                                  autoTable(doc, {
+                                    startY: 30,
+                                    head: [[detailAs.name]],
+                                    body: [
+                                      ["Nomor Kelompok"],
+                                      ["Nama (NIM) Anggota"],
+                                      ["1. \n2. \n3."],
+                                    ],
+                                    margin: { top: 25, bottom: 15 },
+                                    styles: { overflow: "linebreak", fontSize: 8 },
+                                    showHeader: "everyPage",
+                                    theme: "grid",
+                                  });
+                                } else {
+                                  autoTable(doc, {
+                                    startY: 30,
+                                    head: [[detailAs.name]],
+                                    body: [["Nama (NIM) :"], [""]],
+                                    margin: { top: 25, bottom: 15 },
+                                    styles: { overflow: "linebreak", fontSize: 8 },
+                                    showHeader: "everyPage",
+                                    theme: "grid",
+                                  });
+                                }
+
+                                let datacpmk2 = [];
+
+                                datass.cpmk[index].map((cpmknya, inss) => {
+                                  datacpmk2[inss] = ["(" + cpmknya.code + ") " + cpmknya.name];
+                                });
+
+                                autoTable(doc, {
+                                  startY: 75,
+                                  head: [["CPMK yang Diases"]],
+                                  body: datacpmk2,
+                                  margin: { top: 25, bottom: 15 },
+                                  styles: { overflow: "linebreak", fontSize: 8 },
+                                  showHeader: "everyPage",
+                                  theme: "grid",
+                                });
+
+                                let dataKriteria = [];
+                                let codecpmkDisplay = [];
+
+                                datass.datas[index].map((kriteria, insk) => {
+                                  let codecpmk = [];
+                                  let angkaurut = 0;
+                                  datass.cpmkcode[index].map((cpmkcodess, indexks) => {
+                                    if (cpmkcodess.id == kriteria.id) {
+                                      codecpmk[angkaurut] = cpmkcodess.code;
+                                      angkaurut++;
+                                    }
+                                  });
+
+                                  codecpmkDisplay[insk] = codecpmk;
+                                  // Tambah Map
+
+                                  dataKriteria[insk] = [codecpmkDisplay[insk], kriteria.criteria];
+
+                                  let valuenya = [];
+                                  kriteria.detail_category.map((vl, indks) => {
+                                    dataKriteria[insk][indks + 2] = vl.value;
+                                  });
+
+                                  // akhiran map
+                                });
+
+                                let hp = ["CP-MK", "Kriteria"];
+
+                                datass.header[index].map((dh, inhp) => {
+                                  hp[inhp + 2] = dh.assessment_category.name;
+                                });
+
+                                autoTable(doc, {
+                                  startY: 145,
+                                  head: [hp],
+                                  body: dataKriteria,
+                                  margin: { top: 25, bottom: 15 },
+                                  styles: { overflow: "linebreak", fontSize: 8 },
+                                  showHeader: "everyPage",
+                                  theme: "grid",
+                                });
+                              });
+
+                              doc.save("rubrik-" + mk.name + ".pdf");
+                            });
+                          }}
+                        >
+                          <Icon>print</Icon>&nbsp; Cetak RPS
+                        </MDButton>
+                      ))}
+                    </MDBox>
+
                     {/* Data Tabel */}
+
+                    <MDBox p={2}>
+                      {datas.matkul.map((mk) => (
+                        <Table size="small">
+                          <TableRow>
+                            <DataTableHeadCell width="5em">Semester</DataTableHeadCell>
+                            <DataTableHeadCell width="5em"> : </DataTableHeadCell>
+                            <DataTableHeadCell fontSize="small">{mk.semester}</DataTableHeadCell>
+                          </TableRow>
+                          <TableRow>
+                            <DataTableHeadCell width="5em">SKS</DataTableHeadCell>
+                            <DataTableHeadCell width="5em"> : </DataTableHeadCell>
+                            <DataTableHeadCell>{mk.credit}</DataTableHeadCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <DataTableHeadCell width="5em">Dosen</DataTableHeadCell>
+                            <DataTableHeadCell width="5em"> : </DataTableHeadCell>
+                            <DataTableHeadCell>
+                              {datas.namaDosen.map((namDos) => (
+                                <List>{namDos}</List>
+                              ))}
+                            </DataTableHeadCell>
+                          </TableRow>
+                        </Table>
+                      ))}
+
+                      <TableRow></TableRow>
+                      <Table>
+                        <TableRow>
+                          <DataTableBodyCell> Daftar CP Mata Kuliah </DataTableBodyCell>
+                          <DataTableBodyCell width="5em"> Bobot </DataTableBodyCell>
+                        </TableRow>
+                        {datas.cpmk.map((listcpmk, indecpmk) => (
+                          <TableRow>
+                            <DataTableHeadCell width="5em">
+                              ({listcpmk.code}) {listcpmk.name}
+                            </DataTableHeadCell>
+                            <DataTableHeadCell width="5em">
+                              {" "}
+                              {datas.totalcpmk[indecpmk]}%
+                            </DataTableHeadCell>
+                          </TableRow>
+                        ))}
+                        <TableRow>
+                          <DataTableBodyCell></DataTableBodyCell>
+                        </TableRow>
+                        {datas.matkul.map((mk) => (
+                          <TableRow>
+                            <DataTableHeadCell width="5em"> Deskripsi </DataTableHeadCell>
+                            <DataTableHeadCell width="5em"> {mk.description} </DataTableHeadCell>
+                          </TableRow>
+                        ))}
+                        {datas.matkul.map((mk) => (
+                          <TableRow>
+                            <DataTableHeadCell width="5em">
+                              {" "}
+                              Material Pembelajaran{" "}
+                            </DataTableHeadCell>
+                            <DataTableHeadCell width="5em">
+                              {" "}
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: mk.material.replace(/\n/g, "<br />"),
+                                }}
+                              ></div>{" "}
+                            </DataTableHeadCell>
+                          </TableRow>
+                        ))}
+                      </Table>
+                    </MDBox>
+
                     <MDBox display="flex" justifyContent="space-between" alignItems="center" p={1}>
                       <DataTableHeadCell>
                         <MDTypography variant="h6">Bagian 1 Tabel Rencana Assessment</MDTypography>
                       </DataTableHeadCell>
                     </MDBox>
-
-                    <TableContainer>
-                      <MDBox
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        p={1}
-                      >
-                        {datas.matkul.map((mk) => (
-                          <Table size="small">
-                            <TableRow>
-                              <DataTableHeadCell width="5em">Semester</DataTableHeadCell>
-                              <DataTableHeadCell width="5em"> : </DataTableHeadCell>
-                              <DataTableHeadCell fontSize="small">{mk.semester}</DataTableHeadCell>
-                            </TableRow>
-                            <TableRow>
-                              <DataTableHeadCell width="5em">SKS</DataTableHeadCell>
-                              <DataTableHeadCell width="5em"> : </DataTableHeadCell>
-                              <DataTableHeadCell>{mk.credit}</DataTableHeadCell>
-                            </TableRow>
-
-                            <TableRow>
-                              <DataTableHeadCell width="5em">Dosen</DataTableHeadCell>
-                              <DataTableHeadCell width="5em"> : </DataTableHeadCell>
-                              <DataTableHeadCell>
-                                {datas.namaDosen.map((namDos) => (
-                                  <List>{namDos}</List>
-                                ))}
-                              </DataTableHeadCell>
-                            </TableRow>
-                          </Table>
-                        ))}
-                      </MDBox>
-                    </TableContainer>
 
                     <DataTable
                       entriesPerPage={false}

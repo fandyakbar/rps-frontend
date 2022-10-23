@@ -198,7 +198,7 @@ function ShowRubrik(props) {
                       {datas.matkul.map((mk) => (
                         <MDBox>
                           <MDTypography variant="h6" color="white">
-                            Rubrik {mk.name}
+                            Komponen Penilaian {mk.name}
                             <MDBox px={4} align="right">
                               <MDButton
                                 onClick={handleOpen}

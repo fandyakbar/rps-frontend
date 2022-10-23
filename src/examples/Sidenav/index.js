@@ -159,7 +159,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         setUser(response.data);
         console.log("waktu expired", expired);
       })
-      .catch((errorr) => {
+      .catch((error) => {
         logoutHandler();
       });
   };
@@ -256,20 +256,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           (darkMode && !transparentSidenav && whiteSidenav)
         }
       />
-      <List>
-        <NavLink key="dashboard" to="/dahsboard">
-          <SidenavCollapse
-            name="Dashboard"
-            icon={<Icon fontSize="small">dashboard</Icon>}
-            active={"dashboard" === collapseName}
-          />
-        </NavLink>
-      </List>
-      {(() => {
-        if (user.type === "D" || user.type === "T") {
-          return <List>{renderRoutes}</List>;
-        }
-      })()}
+      <List>{renderRoutes}</List>&nbsp;
       <Divider
         light={
           (!darkMode && !whiteSidenav && !transparentSidenav) ||

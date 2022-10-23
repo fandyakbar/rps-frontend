@@ -59,14 +59,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 const style = {
   position: "absolute",
+  display: "flex",
+  justifyContent: "center",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
+  width: "90%",
+  height: "100%",
+  backgroundColor: "rgba(0,0,0, .1)",
   boxShadow: 24,
-  borderRadius: 4,
   p: 4,
+  zIndex: "1000",
+  overflowY: "auto",
 };
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -228,6 +232,7 @@ function ShowTask(props) {
                             aria-labelledby="transition-modal-title"
                             aria-describedby="transition-modal-description"
                             open={open}
+                            padding="15px"
                             onClose={handleClose}
                             closeAfterTransition
                             BackdropComponent={Backdrop}
@@ -237,111 +242,121 @@ function ShowTask(props) {
                           >
                             <Fade in={open}>
                               <Box sx={style}>
-                                <Card>
-                                  <MDBox
-                                    variant="gradient"
-                                    bgColor="info"
-                                    borderRadius="lg"
-                                    coloredShadow="info"
-                                    mx={2}
-                                    mt={-3}
-                                    p={2}
-                                    py={2}
-                                    mb={1}
-                                    textAlign="center"
-                                  >
-                                    <MDTypography
-                                      variant="h6"
-                                      fontWeight="medium"
-                                      color="white"
-                                      mt={1}
+                                <div
+                                  position="absolute"
+                                  backgroundColor="#FFF"
+                                  padding={9}
+                                  zIndex="1000"
+                                  width="35%"
+                                  borderRadius=".5em"
+                                >
+                                  <Card>
+                                    <MDBox
+                                      variant="gradient"
+                                      bgColor="info"
+                                      borderRadius="lg"
+                                      coloredShadow="info"
+                                      width={700}
+                                      mx={2}
+                                      mt={-3}
+                                      p={2}
+                                      py={2}
+                                      mb={1}
+                                      textAlign="center"
                                     >
-                                      Tambah Assessment
-                                    </MDTypography>
-                                  </MDBox>
-                                  <MDBox pt={4} pb={3} px={3}>
-                                    <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-                                    <form method="post" onSubmit={insertHandler}>
-                                      <MDBox mb={2}>
-                                        <MDInput
-                                          type="text"
-                                          label="name"
-                                          fullWidth
-                                          value={name}
-                                          onChange={(e) => setName(e.target.value)}
-                                        />
-                                      </MDBox>
-
-                                      <MDBox mb={2}>
-                                        <MDInput
-                                          type="text"
-                                          label="theme"
-                                          fullWidth
-                                          value={theme}
-                                          onChange={(e) => setTheme(e.target.value)}
-                                        />
-                                      </MDBox>
-                                      <MDBox mb={2}>
-                                        <MDInput
-                                          type="text"
-                                          multiline
-                                          rows={3}
-                                          label="Deskripsi"
-                                          fullWidth
-                                          value={description}
-                                          onChange={(e) => setDescription(e.target.value)}
-                                        />
-                                      </MDBox>
-
-                                      <MDBox mb={2}>
-                                        <MDInput
-                                          type="text"
-                                          multiline
-                                          rows={3}
-                                          label="Langkah"
-                                          fullWidth
-                                          value={step}
-                                          onChange={(e) => setStep(e.target.value)}
-                                        />
-                                      </MDBox>
-
-                                      <MDBox mb={2}>
-                                        <MDInput
-                                          type="text"
-                                          label="Output"
-                                          fullWidth
-                                          value={output}
-                                          onChange={(e) => setOutput(e.target.value)}
-                                        />
-                                      </MDBox>
-
-                                      <MDBox mb={2}>
-                                        <MDInput
-                                          type="number"
-                                          label="Jumlah Anggota"
-                                          fullWidth
-                                          value={member}
-                                          onChange={(e) => setMember(e.target.value)}
-                                        />
-                                      </MDBox>
-
+                                      <MDTypography
+                                        variant="h6"
+                                        fontWeight="medium"
+                                        color="white"
+                                        mt={1}
+                                      >
+                                        Tambah Penugasan
+                                      </MDTypography>
+                                    </MDBox>
+                                    <MDBox pt={4} pb={3} px={1}>
                                       <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+                                      <form method="post" onSubmit={insertHandler}>
+                                        <MDBox px={4} mb={2}>
+                                          <MDInput
+                                            type="text"
+                                            label="name"
+                                            fullWidth
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                          />
+                                        </MDBox>
 
-                                      <MDBox mt={4} mb={1}>
-                                        <MDButton
-                                          type="submit"
-                                          variant="gradient"
-                                          color="info"
-                                          onClick={handleClose}
-                                          fullWidth
-                                        >
-                                          Tambah
-                                        </MDButton>
-                                      </MDBox>
-                                      <MDBox mt={3} mb={1} textAlign="center"></MDBox>
-                                    </form>
-                                  </MDBox>
-                                </Card>
+                                        <MDBox px={4} mb={2}>
+                                          <MDInput
+                                            type="text"
+                                            label="theme"
+                                            fullWidth
+                                            value={theme}
+                                            onChange={(e) => setTheme(e.target.value)}
+                                          />
+                                        </MDBox>
+                                        <MDBox px={4} mb={2}>
+                                          <MDInput
+                                            type="text"
+                                            multiline
+                                            rows={8}
+                                            label="Deskripsi"
+                                            fullWidth
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                          />
+                                        </MDBox>
+
+                                        <MDBox px={4} mb={2}>
+                                          <MDInput
+                                            type="text"
+                                            multiline
+                                            rows={20}
+                                            label="Langkah"
+                                            fullWidth
+                                            value={step}
+                                            onChange={(e) => setStep(e.target.value)}
+                                          />
+                                        </MDBox>
+
+                                        <MDBox px={4} mb={2}>
+                                          <MDInput
+                                            type="text"
+                                            label="Output"
+                                            fullWidth
+                                            value={output}
+                                            onChange={(e) => setOutput(e.target.value)}
+                                          />
+                                        </MDBox>
+
+                                        <MDBox px={4} mb={2}>
+                                          <MDInput
+                                            type="number"
+                                            label="Jumlah Anggota"
+                                            fullWidth
+                                            value={member}
+                                            onChange={(e) => setMember(e.target.value)}
+                                          />
+                                        </MDBox>
+
+                                        <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+
+                                        <MDBox px={4} mt={4} mb={1}>
+                                          <MDButton
+                                            type="submit"
+                                            variant="gradient"
+                                            color="info"
+                                            onClick={handleClose}
+                                            fullWidth
+                                          >
+                                            Tambah
+                                          </MDButton>
+                                        </MDBox>
+                                        <MDBox mt={3} mb={1} textAlign="center"></MDBox>
+                                      </form>
+                                    </MDBox>
+                                  </Card>
+                                </div>
                               </Box>
                             </Fade>
                           </Modal>

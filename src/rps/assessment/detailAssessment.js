@@ -39,6 +39,7 @@ import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
 // DataTable
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
@@ -88,6 +89,7 @@ function DetailAssessment(props) {
 
   // cpmk
   const [assessment, setAssessment] = useState([]);
+  const [kelompok, setKelompok] = useState(0);
 
   const { size } = typography;
   // const token = localStorage.getItem('token');
@@ -137,6 +139,14 @@ function DetailAssessment(props) {
 
   const [validation, setValidation] = useState("");
 
+  const handleChange = (event) => {
+    if (event.target.checked) {
+      setKelompok(1);
+    } else {
+      setKelompok(0);
+    }
+  };
+
   const insertHandler = async (e) => {
     e.preventDefault();
 
@@ -144,6 +154,7 @@ function DetailAssessment(props) {
 
     formData.append("percentage", percentage);
     formData.append("name", name);
+    formData.append("kelompok", kelompok);
 
     await axios
       .post(`http://127.0.0.1:8000/api/assessment/${id_assessment}`, formData)
@@ -208,11 +219,12 @@ function DetailAssessment(props) {
                             <MDBox px={4} align="right">
                               <MDButton
                                 onClick={handleOpen}
-                                color="white"
-                                fontSize="medium"
-                                size="small"
+                                color="light"
+                                size="medium"
+                                variant="gradient"
+                                iconOnly={true}
                               >
-                                <ManageSearchIcon size="medium" /> Tambah
+                                <PlaylistAddIcon />
                               </MDButton>
                               <Modal
                                 aria-labelledby="transition-modal-title"
@@ -252,7 +264,7 @@ function DetailAssessment(props) {
                                       <MDBox pt={4} pb={3} px={3}>
                                         <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
                                         <form method="post" onSubmit={insertHandler}>
-                                          <MDBox mb={2}>
+                                          <MDBox mb={1}>
                                             <MDInput
                                               type="text"
                                               label="name"
@@ -261,6 +273,19 @@ function DetailAssessment(props) {
                                               onChange={(e) => setName(e.target.value)}
                                             />
                                           </MDBox>
+
+                                          <TableCell>
+                                            <div className="form-check form-switch">
+                                              <input
+                                                className="form-check-input"
+                                                type="Checkbox"
+                                                onChange={handleChange}
+                                                fullWidth
+                                                value={kelompok}
+                                              />
+                                              Kelompok
+                                            </div>
+                                          </TableCell>
 
                                           <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
 

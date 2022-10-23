@@ -63,11 +63,14 @@ import Task from "rps/taks";
 import ShowTask from "rps/taks/showTask";
 import EditTask from "rps/taks/editTask";
 import PDF from "rps/dashboard/pdf";
+import RPS from "layouts/profile/rps";
+
+import Kategori from "rps/assessment/kategori";
 
 const routes = [
   {
-    type: "dashboard",
-    name: "Dashboard",
+    type: "collapse",
+    name: "Home",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
@@ -76,29 +79,29 @@ const routes = [
 
   {
     type: "collapse",
-    name: "Assessment Penilaian",
-    key: "assessment",
-    icon: <Icon fontSize="small">calculate</Icon>,
-    route: "/assessment",
-    component: <Assessment />,
-  },
-  {
-    type: "collapse",
-    name: "Tugas",
-    key: "task",
-    icon: <Icon fontSize="small">task</Icon>,
-    route: "/task",
-    component: <Task />,
+    name: "RPS",
+    key: "rps",
+    icon: <Icon fontSize="small">vertical_split</Icon>,
+    route: "/rps",
+    component: <RPS />,
   },
 
-  {
-    type: "collapse",
-    name: "Rubrik",
-    key: "rubrik",
-    icon: <Icon fontSize="small">vertical_split</Icon>,
-    route: "/rubrik",
-    component: <Rubrik />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Assessment Penilaian",
+  //   key: "assessment",
+  //   icon: <Icon fontSize="small">calculate</Icon>,
+  //   route: "/assessment",
+  //   component: <Assessment />,
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "Tugas",
+  //   key: "task",
+  //   icon: <Icon fontSize="small">task</Icon>,
+  //   route: "/task",
+  //   component: <Task />,
+  // },
 
   {
     type: "Login",
@@ -207,6 +210,15 @@ const routes = [
     route: "/task/show/:id",
     component: <EditTask />,
   },
+
+  {
+    type: "kategori",
+    name: "kategori",
+    key: "kategori",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/kategori/:id",
+    component: <Kategori />,
+  },
   {
     type: "pdf",
     name: "pdf",
@@ -218,21 +230,3 @@ const routes = [
 ];
 
 export default routes;
-
-// {
-//   type: "collapse",
-//   name: "CPMK",
-//   key: "cpmk",
-//   icon: <Icon fontSize="small">bookmarks</Icon>,
-//   route: "/cpmk",
-//   component: <Tables />,
-// },
-
-// {
-//   type: "lamandetail",
-//   name: "cpmk_detail",
-//   key: "cpmk",
-//   icon: <Icon fontSize="small">Haha</Icon>,
-//   route: "/cpmk_detail/:id",
-//   component: <CPMK />,
-// },

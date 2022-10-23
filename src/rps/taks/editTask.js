@@ -219,7 +219,7 @@ function EditTask(props) {
                       <MDInput
                         type="text"
                         multiline
-                        rows={2}
+                        rows={8}
                         label="Deskripsi"
                         fullWidth
                         value={description}
@@ -231,7 +231,7 @@ function EditTask(props) {
                       <MDInput
                         type="text"
                         multiline
-                        rows={3}
+                        rows={20}
                         label="Langkah"
                         fullWidth
                         value={step}
