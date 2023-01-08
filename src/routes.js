@@ -66,6 +66,7 @@ import PDF from "rps/dashboard/pdf";
 import RPS from "layouts/profile/rps";
 
 import Kategori from "rps/assessment/kategori";
+import PrintOnly from "rps/dashboard/printOnly";
 
 const routes = [
   {
@@ -137,6 +138,14 @@ const routes = [
     icon: <Icon fontSize="small">Haha</Icon>,
     route: "/dashboard/:id",
     component: <ShowRubrikDashboard />,
+  },
+  {
+    type: "lamandetaildashboard",
+    name: "printOnly",
+    key: "printOnly",
+    icon: <Icon fontSize="small">Haha</Icon>,
+    route: "/dashboards/:id",
+    component: <PrintOnly />,
   },
 
   {

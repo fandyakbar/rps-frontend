@@ -34,23 +34,8 @@ import MDInput from "components/MDInput";
 
 import axios from "axios";
 
-//icon
-import ManageSearchIcon from "@mui/icons-material/ManageSearch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-
-// DataTable
-import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
-import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
-
-// Link
-import { Link } from "react-router-dom";
-
-// modal
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
+// loader
+import { PacmanLoader } from "react-spinners";
 
 const style = {
   position: "absolute",
@@ -65,7 +50,6 @@ const style = {
 };
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import data from "layouts/tables/data/authorsTableData";
 
 function withRouter(Component) {
   function ComponentWithRouterProp(props) {
@@ -79,12 +63,10 @@ function withRouter(Component) {
 }
 
 function EditTask(props) {
-  // console.warn("props", props.router.params.id);
+  // Loader
+  const [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#4bace9");
 
-  // cpmk
-  const [cpmk, setCpmk] = useState([]);
-  const [nama, setNama] = useState([]);
-  const [kode, setKode] = useState([]);
   const [idrps, setIdrps] = useState([]);
 
   // Task
@@ -112,6 +94,7 @@ function EditTask(props) {
         setMember(response.data.member);
         setIdrps(response.data.course_plan_id);
       });
+    setLoading(false);
   };
 
   const [user, setUser] = useState({});
@@ -129,14 +112,6 @@ function EditTask(props) {
     fetchDataUser();
     fetchData();
   }, []);
-
-  // console.warn("di sini cek", idrps);
-
-  // cpmk.map((datas)=>{
-  //   const matkul = datas.matkul
-  //   // console.warn("matkul", matkul);
-  //   }
-  // )
 
   const navigate = useNavigate();
 
@@ -171,109 +146,121 @@ function EditTask(props) {
         }
       })()}
       <DashboardNavbar />
-      <MDBox py={3}>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={8}>
-              {/* Isinya Tarok Di sini */}
-              <Card>
-                <MDBox
-                  mx={2}
-                  mt={-3}
-                  py={3}
-                  px={2}
-                  variant="gradient"
-                  bgColor="info"
-                  borderRadius="lg"
-                  coloredShadow="info"
-                >
-                  <MDBox>
-                    <MDTypography variant="h6" color="white">
-                      Edit Penugasan
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
-                <MDBox pt={4} pb={3} px={3}>
-                  <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-                  <form method="post" onSubmit={updateHandler}>
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        label="name"
-                        fullWidth
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </MDBox>
-
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        label="theme"
-                        fullWidth
-                        value={theme}
-                        onChange={(e) => setTheme(e.target.value)}
-                      />
-                    </MDBox>
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        multiline
-                        rows={8}
-                        label="Deskripsi"
-                        fullWidth
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-                    </MDBox>
-
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        multiline
-                        rows={20}
-                        label="Langkah"
-                        fullWidth
-                        value={step}
-                        onChange={(e) => setStep(e.target.value)}
-                      />
-                    </MDBox>
-
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        label="Output"
-                        fullWidth
-                        value={output}
-                        onChange={(e) => setOutput(e.target.value)}
-                      />
-                    </MDBox>
-
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="number"
-                        label="Jumlah Anggota"
-                        fullWidth
-                        value={member}
-                        onChange={(e) => setMember(e.target.value)}
-                      />
-                    </MDBox>
-
-                    <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-
-                    <MDBox mt={4} mb={1}>
-                      <MDButton type="submit" variant="gradient" color="info">
-                        Submit
-                      </MDButton>
-                    </MDBox>
-                    <MDBox mt={3} mb={1} textAlign="center"></MDBox>
-                  </form>
-                </MDBox>
-              </Card>
-            </Grid>
-          </Grid>
+      {loading ? (
+        <MDBox
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          height="100%"
+        >
+          <PacmanLoader color={color} loading={loading} size={25} />
         </MDBox>
-      </MDBox>
+      ) : (
+        <MDBox py={3}>
+          <MDBox>
+            <Grid container spacing={3}>
+              <Grid item xs={8}>
+                {/* Isinya Tarok Di sini */}
+                <Card>
+                  <MDBox
+                    mx={2}
+                    mt={-3}
+                    py={3}
+                    px={2}
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="info"
+                  >
+                    <MDBox>
+                      <MDTypography variant="h6" color="white">
+                        Edit Penugasan
+                      </MDTypography>
+                    </MDBox>
+                  </MDBox>
+                  <MDBox pt={4} pb={3} px={3}>
+                    <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+                    <form method="post" onSubmit={updateHandler}>
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="text"
+                          label="name"
+                          fullWidth
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </MDBox>
+
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="text"
+                          label="theme"
+                          fullWidth
+                          value={theme}
+                          onChange={(e) => setTheme(e.target.value)}
+                        />
+                      </MDBox>
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="text"
+                          multiline
+                          rows={8}
+                          label="Deskripsi"
+                          fullWidth
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                        />
+                      </MDBox>
+
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="text"
+                          multiline
+                          rows={20}
+                          label="Langkah"
+                          fullWidth
+                          value={step}
+                          onChange={(e) => setStep(e.target.value)}
+                        />
+                      </MDBox>
+
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="text"
+                          label="Output"
+                          fullWidth
+                          value={output}
+                          onChange={(e) => setOutput(e.target.value)}
+                        />
+                      </MDBox>
+
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="number"
+                          label="Jumlah Anggota"
+                          fullWidth
+                          value={member}
+                          onChange={(e) => setMember(e.target.value)}
+                        />
+                      </MDBox>
+
+                      <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+
+                      <MDBox mt={4} mb={1}>
+                        <MDButton type="submit" variant="gradient" color="info">
+                          Submit
+                        </MDButton>
+                      </MDBox>
+                      <MDBox mt={3} mb={1} textAlign="center"></MDBox>
+                    </form>
+                  </MDBox>
+                </Card>
+              </Grid>
+            </Grid>
+          </MDBox>
+        </MDBox>
+      )}
       <Footer />
     </DashboardLayout>
   );

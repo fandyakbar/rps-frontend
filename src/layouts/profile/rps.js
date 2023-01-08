@@ -78,6 +78,9 @@ import MDBadge from "components/MDBadge";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
+// loader
+import { PacmanLoader } from "react-spinners";
+
 function displayRPS(list, datas, user, indeks, ngecek) {
   if (ngecek.lecturer_id == user.id) {
     return (
@@ -105,10 +108,16 @@ function displayRPS(list, datas, user, indeks, ngecek) {
 function RPS() {
   // Data Tabel Manual
 
+  const [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#4bace9");
+
   // Rubrik
   const [listRPS, setListRPS] = useState([]);
 
+  const [hitung, setHitung] = useState(true);
+
   const fetchData = async () => {
+    setLoading(true);
     await axios
       .get("http://127.0.0.1:8000/api/dashboard")
 
@@ -116,6 +125,7 @@ function RPS() {
         setListRPS(response.data);
         console.warn("haloo", response.data);
       });
+    setLoading(false);
   };
 
   const token = localStorage.getItem("token");
@@ -130,6 +140,38 @@ function RPS() {
   };
 
   console.log("id user nih bos", user.id);
+
+  function displayRPSAdmin(list, datas, user, indeks, ngecek, itung) {
+    if (ngecek.lecturer_id == user.id) {
+      return (
+        <Link to={`/dashboard/${list.id}`}>
+          <MDButton variant="gradient" color="info" fontSize="medium" iconOnly={true}>
+            <ManageSearchIcon />
+          </MDButton>
+        </Link>
+      );
+    } else {
+      if (itung <= 0) {
+        if (datas.checker[indeks] === 100) {
+          return (
+            <Link to={`/dashboards/${list.id}`}>
+              <MDButton
+                title="Lihat Detail"
+                variant="gradient"
+                color="success"
+                fontSize="medium"
+                iconOnly={true}
+              >
+                <ManageSearchIcon />
+              </MDButton>
+            </Link>
+          );
+        } else {
+          return <MDBadge badgeContent="RPS Belum Tersedia" color="warning" size="xs" container />;
+        }
+      }
+    }
+  }
 
   useEffect(() => {
     fetchDataUser();
@@ -176,55 +218,74 @@ function RPS() {
           </Grid>
         </MDBox>
         {(() => {
-          if (user.type !== "M") {
+          if (user.type === "D") {
             return (
               <div>
-                <MDBox pt={0} px={2} lineHeight={1.25}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    RPS Mata Kuliah
-                  </MDTypography>
-                  <MDBox mb={1}>
-                    <MDTypography variant="button" color="text">
-                      Lihat Daftar RPS di Sini
-                    </MDTypography>
+                {loading ? (
+                  <MDBox
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    width="100%"
+                    height="100%"
+                  >
+                    <PacmanLoader color={color} loading={loading} size={25} />
                   </MDBox>
-                </MDBox>
+                ) : (
+                  <>
+                    <MDBox pt={0} px={2} lineHeight={1.25}>
+                      <MDTypography variant="h6" fontWeight="medium">
+                        RPS Mata Kuliah
+                      </MDTypography>
+                      <MDBox mb={1}>
+                        <MDTypography variant="button" color="text">
+                          Lihat Daftar RPS di Sini
+                        </MDTypography>
+                      </MDBox>
+                    </MDBox>
 
-                <TableContainer>
-                  <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-                    {listRPS.map((datas) => (
-                      <Table size="small">
-                        <TableRow>
-                          <DataTableHeadCell>Semester</DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center">
-                            Kode
-                          </DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center">
-                            Nama Mata Kuliah
-                          </DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center">
-                            SKS
-                          </DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center" alignItems="center">
-                            Aksi
-                          </DataTableHeadCell>
-                        </TableRow>
+                    <TableContainer>
+                      <MDBox
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        p={3}
+                      >
+                        {listRPS.map((datas) => (
+                          <Table size="small">
+                            <TableRow>
+                              <DataTableHeadCell>Semester</DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                Kode
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                Nama Mata Kuliah
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                SKS
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center" alignItems="center">
+                                Aksi
+                              </DataTableHeadCell>
+                            </TableRow>
 
-                        {datas.rps.map((list, indeks) => (
-                          <TableBody>
-                            {list.course_plan_lecturer.map((ngecek) =>
-                              displayRPS(list, datas, user, indeks, ngecek)
-                            )}
-                          </TableBody>
+                            {datas.rps.map((list, indeks) => (
+                              <TableBody>
+                                {list.course_plan_lecturer.map((ngecek) =>
+                                  displayRPS(list, datas, user, indeks, ngecek)
+                                )}
+                              </TableBody>
+                            ))}
+                          </Table>
                         ))}
-                      </Table>
-                    ))}
-                  </MDBox>
-                </TableContainer>
-                {/* Tabel Akhir */}
+                      </MDBox>
+                    </TableContainer>
+                    {/* Tabel Akhir */}
+                  </>
+                )}
               </div>
             );
-          } else {
+          } else if (user.type === "M") {
             return (
               <div>
                 <MDBox pt={0} px={2} lineHeight={1.25}>
@@ -271,6 +332,7 @@ function RPS() {
                                     return (
                                       <Link to={`/dashboard/${list.id}`}>
                                         <MDButton
+                                          title="Lihat Detail"
                                           variant="gradient"
                                           color="info"
                                           fontSize="medium"
@@ -300,6 +362,91 @@ function RPS() {
                   </MDBox>
                 </TableContainer>
                 {/* Tabel Akhir */}
+              </div>
+            );
+          } else if (user.type === "T") {
+            return (
+              <div>
+                {loading ? (
+                  <MDBox
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    width="100%"
+                    height="100%"
+                  >
+                    <PacmanLoader color={color} loading={loading} size={25} />
+                  </MDBox>
+                ) : (
+                  <>
+                    <MDBox pt={0} px={2} lineHeight={1.25}>
+                      <MDTypography variant="h6" fontWeight="medium">
+                        RPS Mata Kuliah
+                      </MDTypography>
+                      <MDBox mb={1}>
+                        <MDTypography variant="button" color="text">
+                          Lihat Daftar RPS di Sini
+                        </MDTypography>
+                      </MDBox>
+                    </MDBox>
+
+                    <TableContainer>
+                      <MDBox
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        p={3}
+                      >
+                        {listRPS.map((datas) => (
+                          <Table size="small">
+                            <TableRow>
+                              <DataTableHeadCell>Semester</DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                Kode
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                Nama Mata Kuliah
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                SKS
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                Dosen Pengampu
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center" alignItems="center">
+                                Aksi
+                              </DataTableHeadCell>
+                            </TableRow>
+
+                            {datas.rps.map((list, indeks) => (
+                              <TableBody>
+                                <TableRow>
+                                  <DataTableBodyCell>{list.semester}</DataTableBodyCell>
+                                  <DataTableBodyCell>{list.code}</DataTableBodyCell>
+                                  <DataTableBodyCell>{list.name}</DataTableBodyCell>
+                                  <DataTableBodyCell>{list.credit}</DataTableBodyCell>
+                                  <DataTableBodyCell>
+                                    {list.course_plan_lecturer.map((dosen) => (
+                                      <>
+                                        {dosen.lecturer.name} <br />
+                                      </>
+                                    ))}
+                                  </DataTableBodyCell>
+                                  <DataTableBodyCell>
+                                    {list.course_plan_lecturer.map((ngecek, itung) =>
+                                      displayRPSAdmin(list, datas, user, indeks, ngecek, itung)
+                                    )}
+                                  </DataTableBodyCell>
+                                </TableRow>
+                              </TableBody>
+                            ))}
+                          </Table>
+                        ))}
+                      </MDBox>
+                    </TableContainer>
+                    {/* Tabel Akhir */}
+                  </>
+                )}
               </div>
             );
           }

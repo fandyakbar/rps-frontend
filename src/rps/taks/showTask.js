@@ -57,6 +57,9 @@ import Fade from "@mui/material/Fade";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// loader
+import { PacmanLoader } from "react-spinners";
+
 const style = {
   position: "absolute",
   display: "flex",
@@ -96,7 +99,9 @@ function cekMember(member) {
 }
 
 function ShowTask(props) {
-  // console.warn("props", props.router.params.id);
+  // Loader
+  const [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#4bace9");
 
   // cpmk
   const [task, setTask] = useState([]);
@@ -112,6 +117,7 @@ function ShowTask(props) {
       .then((response) => {
         setTask(response.data);
       });
+    setLoading(false);
   };
 
   const [user, setUser] = useState({});
@@ -150,6 +156,7 @@ function ShowTask(props) {
   const [validation, setValidation] = useState("");
 
   const insertHandler = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     const formData = new FormData();
@@ -170,6 +177,8 @@ function ShowTask(props) {
       })
       .catch((error) => {
         setValidation(error.response.data);
+        toast.error(error.response.data.message);
+        setLoading(false);
       });
   };
 
@@ -177,6 +186,7 @@ function ShowTask(props) {
     // alert(`Yeee di klik ${id}`);
     let text = "Yakin Ingin Menghapus Data??";
     if (confirm(text) == true) {
+      setLoading(true);
       axios
         .delete(`http://127.0.0.1:8000/api/task/${idHapus}`)
         .then((response) => {
@@ -199,237 +209,260 @@ function ShowTask(props) {
       })()}
       <DashboardNavbar />
       <ToastContainer />
-      {task.map((datas) => (
-        <MDBox py={3}>
-          <MDBox>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                {/* Isinya Tarok Di sini */}
-                <Card>
-                  <MDBox
-                    mx={2}
-                    mt={-3}
-                    py={3}
-                    px={2}
-                    variant="gradient"
-                    bgColor="info"
-                    borderRadius="lg"
-                    coloredShadow="info"
-                  >
-                    <MDBox>
-                      <MDTypography variant="h6" color="white">
-                        Daftar Tugas Mata Kuliah {datas.namaMatkul}
-                        <MDBox px={4} align="right">
-                          <MDButton
-                            onClick={handleOpen}
-                            color="white"
-                            fontSize="medium"
-                            size="small"
-                          >
-                            <ManageSearchIcon size="medium" /> Tambah
-                          </MDButton>
-                          <Modal
-                            aria-labelledby="transition-modal-title"
-                            aria-describedby="transition-modal-description"
-                            open={open}
-                            padding="15px"
-                            onClose={handleClose}
-                            closeAfterTransition
-                            BackdropComponent={Backdrop}
-                            BackdropProps={{
-                              timeout: 500,
-                            }}
-                          >
-                            <Fade in={open}>
-                              <Box sx={style}>
-                                <div
-                                  position="absolute"
-                                  backgroundColor="#FFF"
-                                  padding={9}
-                                  zIndex="1000"
-                                  width="35%"
-                                  borderRadius=".5em"
-                                >
-                                  <Card>
-                                    <MDBox
-                                      variant="gradient"
-                                      bgColor="info"
-                                      borderRadius="lg"
-                                      coloredShadow="info"
-                                      width={700}
-                                      mx={2}
-                                      mt={-3}
-                                      p={2}
-                                      py={2}
-                                      mb={1}
-                                      textAlign="center"
-                                    >
-                                      <MDTypography
-                                        variant="h6"
-                                        fontWeight="medium"
-                                        color="white"
-                                        mt={1}
-                                      >
-                                        Tambah Penugasan
-                                      </MDTypography>
-                                    </MDBox>
-                                    <MDBox pt={4} pb={3} px={1}>
-                                      <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-                                      <form method="post" onSubmit={insertHandler}>
-                                        <MDBox px={4} mb={2}>
-                                          <MDInput
-                                            type="text"
-                                            label="name"
-                                            fullWidth
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                          />
-                                        </MDBox>
-
-                                        <MDBox px={4} mb={2}>
-                                          <MDInput
-                                            type="text"
-                                            label="theme"
-                                            fullWidth
-                                            value={theme}
-                                            onChange={(e) => setTheme(e.target.value)}
-                                          />
-                                        </MDBox>
-                                        <MDBox px={4} mb={2}>
-                                          <MDInput
-                                            type="text"
-                                            multiline
-                                            rows={8}
-                                            label="Deskripsi"
-                                            fullWidth
-                                            value={description}
-                                            onChange={(e) => setDescription(e.target.value)}
-                                          />
-                                        </MDBox>
-
-                                        <MDBox px={4} mb={2}>
-                                          <MDInput
-                                            type="text"
-                                            multiline
-                                            rows={20}
-                                            label="Langkah"
-                                            fullWidth
-                                            value={step}
-                                            onChange={(e) => setStep(e.target.value)}
-                                          />
-                                        </MDBox>
-
-                                        <MDBox px={4} mb={2}>
-                                          <MDInput
-                                            type="text"
-                                            label="Output"
-                                            fullWidth
-                                            value={output}
-                                            onChange={(e) => setOutput(e.target.value)}
-                                          />
-                                        </MDBox>
-
-                                        <MDBox px={4} mb={2}>
-                                          <MDInput
-                                            type="number"
-                                            label="Jumlah Anggota"
-                                            fullWidth
-                                            value={member}
-                                            onChange={(e) => setMember(e.target.value)}
-                                          />
-                                        </MDBox>
-
-                                        <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-
-                                        <MDBox px={4} mt={4} mb={1}>
-                                          <MDButton
-                                            type="submit"
-                                            variant="gradient"
-                                            color="info"
-                                            onClick={handleClose}
-                                            fullWidth
-                                          >
-                                            Tambah
-                                          </MDButton>
-                                        </MDBox>
-                                        <MDBox mt={3} mb={1} textAlign="center"></MDBox>
-                                      </form>
-                                    </MDBox>
-                                  </Card>
-                                </div>
-                              </Box>
-                            </Fade>
-                          </Modal>
-                        </MDBox>
-                      </MDTypography>
-                    </MDBox>
-                  </MDBox>
-
-                  {/* Tabel Mulai */}
-
-                  <TableContainer>
-                    <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-                      <Table size="small">
-                        <TableRow>
-                          <DataTableHeadCell component="th" align="center">
-                            <MDTypography variant="h6"> Tugas </MDTypography>
-                          </DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center">
-                            <MDTypography variant="h6"> Tema </MDTypography>
-                          </DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center">
-                            <MDTypography variant="h6"> Output </MDTypography>
-                          </DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center">
-                            <MDTypography variant="h6"> Member </MDTypography>
-                          </DataTableHeadCell>
-                          <DataTableHeadCell component="th" align="center">
-                            <MDTypography variant="h6"> Aksi </MDTypography>
-                          </DataTableHeadCell>
-                        </TableRow>
-                        <TableBody>
-                          {datas.tugas.map((item) => (
-                            <TableRow>
-                              <DataTableBodyCell>{item.name} </DataTableBodyCell>
-                              <DataTableBodyCell>{item.theme} </DataTableBodyCell>
-                              <DataTableBodyCell>{item.output} </DataTableBodyCell>
-                              <DataTableBodyCell>{cekMember(item.member)}</DataTableBodyCell>
-                              <DataTableBodyCell>
-                                <Link to={`/task/show/${item.id}`}>
-                                  <MDButton
-                                    variant="gradient"
-                                    color="success"
-                                    size="medium"
-                                    iconOnly={true}
-                                  >
-                                    <BorderColorIcon />
-                                  </MDButton>
-                                </Link>
-                                &nbsp; &nbsp;
-                                <MDButton
-                                  variant="gradient"
-                                  color="error"
-                                  size="medium"
-                                  iconOnly={true}
-                                  onClick={() => hapusData(item.id)}
-                                >
-                                  <DeleteIcon fontSize="large" />
-                                </MDButton>
-                              </DataTableBodyCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </MDBox>
-                  </TableContainer>
-
-                  {/* Tabel Akhir */}
-                </Card>
-              </Grid>
-            </Grid>
-          </MDBox>
+      {loading ? (
+        <MDBox
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          height="100%"
+        >
+          <PacmanLoader color={color} loading={loading} size={25} />
         </MDBox>
-      ))}
+      ) : (
+        <>
+          {task.map((datas) => (
+            <MDBox py={3}>
+              <MDBox>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    {/* Isinya Tarok Di sini */}
+                    <Card>
+                      <MDBox
+                        mx={2}
+                        mt={-3}
+                        py={3}
+                        px={2}
+                        variant="gradient"
+                        bgColor="info"
+                        borderRadius="lg"
+                        coloredShadow="info"
+                      >
+                        <MDBox>
+                          <MDTypography variant="h6" color="white">
+                            Daftar Tugas Mata Kuliah {datas.namaMatkul}
+                            <MDBox px={4} align="right">
+                              <MDButton
+                                onClick={handleOpen}
+                                color="white"
+                                fontSize="medium"
+                                size="small"
+                              >
+                                <ManageSearchIcon size="medium" /> Tambah
+                              </MDButton>
+                              <Modal
+                                aria-labelledby="transition-modal-title"
+                                aria-describedby="transition-modal-description"
+                                open={open}
+                                padding="15px"
+                                onClose={handleClose}
+                                closeAfterTransition
+                                BackdropComponent={Backdrop}
+                                BackdropProps={{
+                                  timeout: 500,
+                                }}
+                              >
+                                <Fade in={open}>
+                                  <Box sx={style}>
+                                    <div
+                                      position="absolute"
+                                      backgroundColor="#FFF"
+                                      padding={9}
+                                      zIndex="1000"
+                                      width="35%"
+                                      borderRadius=".5em"
+                                    >
+                                      <Card>
+                                        <MDBox
+                                          variant="gradient"
+                                          bgColor="info"
+                                          borderRadius="lg"
+                                          coloredShadow="info"
+                                          width={700}
+                                          mx={2}
+                                          mt={-3}
+                                          p={2}
+                                          py={2}
+                                          mb={1}
+                                          textAlign="center"
+                                        >
+                                          <MDTypography
+                                            variant="h6"
+                                            fontWeight="medium"
+                                            color="white"
+                                            mt={1}
+                                          >
+                                            Tambah Penugasan
+                                          </MDTypography>
+                                        </MDBox>
+                                        <MDBox pt={4} pb={3} px={1}>
+                                          <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+                                          <form method="post" onSubmit={insertHandler}>
+                                            <MDBox px={4} mb={2}>
+                                              <MDInput
+                                                type="text"
+                                                label="name"
+                                                fullWidth
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
+                                              />
+                                            </MDBox>
+
+                                            <MDBox px={4} mb={2}>
+                                              <MDInput
+                                                type="text"
+                                                label="theme"
+                                                fullWidth
+                                                value={theme}
+                                                onChange={(e) => setTheme(e.target.value)}
+                                              />
+                                            </MDBox>
+                                            <MDBox px={4} mb={2}>
+                                              <MDInput
+                                                type="text"
+                                                multiline
+                                                rows={8}
+                                                label="Deskripsi"
+                                                fullWidth
+                                                value={description}
+                                                onChange={(e) => setDescription(e.target.value)}
+                                              />
+                                            </MDBox>
+
+                                            <MDBox px={4} mb={2}>
+                                              <MDInput
+                                                type="text"
+                                                multiline
+                                                rows={20}
+                                                label="Langkah"
+                                                fullWidth
+                                                value={step}
+                                                onChange={(e) => setStep(e.target.value)}
+                                              />
+                                            </MDBox>
+
+                                            <MDBox px={4} mb={2}>
+                                              <MDInput
+                                                type="text"
+                                                label="Output"
+                                                fullWidth
+                                                value={output}
+                                                onChange={(e) => setOutput(e.target.value)}
+                                              />
+                                            </MDBox>
+
+                                            <MDBox px={4} mb={2}>
+                                              <MDInput
+                                                type="number"
+                                                label="Jumlah Anggota"
+                                                fullWidth
+                                                value={member}
+                                                onChange={(e) => setMember(e.target.value)}
+                                              />
+                                            </MDBox>
+
+                                            <MDBox
+                                              display="flex"
+                                              alignItems="center"
+                                              ml={-1}
+                                            ></MDBox>
+
+                                            <MDBox px={4} mt={4} mb={1}>
+                                              <MDButton
+                                                type="submit"
+                                                variant="gradient"
+                                                color="info"
+                                                onClick={handleClose}
+                                                fullWidth
+                                              >
+                                                Tambah
+                                              </MDButton>
+                                            </MDBox>
+                                            <MDBox mt={3} mb={1} textAlign="center"></MDBox>
+                                          </form>
+                                        </MDBox>
+                                      </Card>
+                                    </div>
+                                  </Box>
+                                </Fade>
+                              </Modal>
+                            </MDBox>
+                          </MDTypography>
+                        </MDBox>
+                      </MDBox>
+
+                      {/* Tabel Mulai */}
+
+                      <TableContainer>
+                        <MDBox
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          p={3}
+                        >
+                          <Table size="small">
+                            <TableRow>
+                              <DataTableHeadCell component="th" align="center">
+                                <MDTypography variant="h6"> Tugas </MDTypography>
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                <MDTypography variant="h6"> Tema </MDTypography>
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                <MDTypography variant="h6"> Output </MDTypography>
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                <MDTypography variant="h6"> Member </MDTypography>
+                              </DataTableHeadCell>
+                              <DataTableHeadCell component="th" align="center">
+                                <MDTypography variant="h6"> Aksi </MDTypography>
+                              </DataTableHeadCell>
+                            </TableRow>
+                            <TableBody>
+                              {datas.tugas.map((item) => (
+                                <TableRow>
+                                  <DataTableBodyCell>{item.name} </DataTableBodyCell>
+                                  <DataTableBodyCell>{item.theme} </DataTableBodyCell>
+                                  <DataTableBodyCell>{item.output} </DataTableBodyCell>
+                                  <DataTableBodyCell>{cekMember(item.member)}</DataTableBodyCell>
+                                  <DataTableBodyCell>
+                                    <Link to={`/task/show/${item.id}`}>
+                                      <MDButton
+                                        variant="gradient"
+                                        color="success"
+                                        size="medium"
+                                        iconOnly={true}
+                                      >
+                                        <BorderColorIcon />
+                                      </MDButton>
+                                    </Link>
+                                    &nbsp; &nbsp;
+                                    <MDButton
+                                      variant="gradient"
+                                      color="error"
+                                      size="medium"
+                                      iconOnly={true}
+                                      onClick={() => hapusData(item.id)}
+                                    >
+                                      <DeleteIcon fontSize="large" />
+                                    </MDButton>
+                                  </DataTableBodyCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </MDBox>
+                      </TableContainer>
+
+                      {/* Tabel Akhir */}
+                    </Card>
+                  </Grid>
+                </Grid>
+              </MDBox>
+            </MDBox>
+          ))}
+        </>
+      )}
       <Footer />
     </DashboardLayout>
   );

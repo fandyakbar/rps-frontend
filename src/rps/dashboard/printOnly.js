@@ -131,7 +131,7 @@ function convertBaris(replaceNilai) {
   return replaceNilai.replace(/\r\n/g, "<br/>");
 }
 
-function ShowRubrikDashboard(props) {
+function printOnly(props) {
   // Loader
   const [loading, setLoading] = useState(true);
   let [color, setColor] = useState("#4bace9");
@@ -242,32 +242,6 @@ function ShowRubrikDashboard(props) {
                         </MDBox>
 
                         <MDBox p={2}>
-                          {(() => {
-                            if (user.type != "M") {
-                              return (
-                                <>
-                                  <Link to={`/assessment_detail/${id_course}`}>
-                                    <MDButton variant="gradient" color="success" size="medium">
-                                      <Icon fontSize="small">calculate</Icon> &nbsp; Assessment
-                                    </MDButton>
-                                  </Link>
-                                  &nbsp;
-                                  <Link to={`/task/${id_course}`}>
-                                    <MDButton variant="gradient" color="success" size="medium">
-                                      <Icon fontSize="small">task</Icon> &nbsp; Tugas
-                                    </MDButton>
-                                  </Link>
-                                  &nbsp;
-                                  <Link to={`/rubrik_detail/${id_course}`}>
-                                    <MDButton variant="gradient" color="success" size="medium">
-                                      <Icon fontSize="small">vertical_split</Icon> &nbsp; Tabel
-                                      Rencana Assessment
-                                    </MDButton>
-                                  </Link>
-                                </>
-                              );
-                            }
-                          })()}
                           &nbsp;
                           {detailData.map((datass) => (
                             <MDButton
@@ -813,4 +787,4 @@ function ShowRubrikDashboard(props) {
   );
 }
 
-export default withRouter(ShowRubrikDashboard);
+export default withRouter(printOnly);

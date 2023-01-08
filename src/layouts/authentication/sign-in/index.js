@@ -14,9 +14,12 @@ Coded by www.creative-tim.com
 */
 
 import React, { useEffect } from "react";
-import { useState } from "react";
+import { useState, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// loader
+import { PacmanLoader } from "react-spinners";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -52,6 +55,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Basic() {
+  // Loader
+  const [loading, setLoading] = useState(false);
+  let [color, setColor] = useState("#4bace9");
   // Errror Pesan
   const [errorSB, setErrorSB] = useState(false);
 
@@ -87,6 +93,7 @@ function Basic() {
   const navigate = useNavigate();
 
   const loginHandler = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     const formData = new FormData();
@@ -107,6 +114,8 @@ function Basic() {
         setValidation(error.response.data);
         toast.error(error.response.data.error);
       });
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -128,58 +137,78 @@ function Basic() {
 
   return (
     <BasicLayout image={bgImage}>
-      <ToastContainer />
-      <Card>
+      {loading ? (
         <MDBox
-          variant="gradient"
-          bgColor="info"
-          borderRadius="lg"
-          coloredShadow="info"
-          mx={2}
-          mt={-3}
-          p={2}
-          mb={1}
-          textAlign="center"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          height="100vh"
         >
-          <Grid container justifyContent="center">
-            <img src={logoUnand} height={40} width={40} />
-          </Grid>
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Login
-          </MDTypography>
+          <PacmanLoader color={color} loading={loading} size={25} />
         </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
-          <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-          <form onSubmit={loginHandler} method="post">
-            <MDBox mb={2}>
-              <MDInput
-                type="email"
-                label="Email"
-                fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="password"
-                label="Password"
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-
-            <MDBox mt={4} mb={1}>
-              <MDButton type="submit" variant="gradient" onClick={notify} color="info" fullWidth>
+      ) : (
+        <>
+          <ToastContainer />
+          <Card>
+            <MDBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="info"
+              mx={2}
+              mt={-3}
+              p={2}
+              mb={1}
+              textAlign="center"
+            >
+              <Grid container justifyContent="center">
+                <img src={logoUnand} height={40} width={40} />
+              </Grid>
+              <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
                 Login
-              </MDButton>
+              </MDTypography>
             </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center"></MDBox>
-          </form>
-        </MDBox>
-      </Card>
+            <MDBox pt={4} pb={3} px={3}>
+              <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+              <form onSubmit={loginHandler} method="post">
+                <MDBox mb={2}>
+                  <MDInput
+                    type="email"
+                    label="Email"
+                    fullWidth
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </MDBox>
+                <MDBox mb={2}>
+                  <MDInput
+                    type="password"
+                    label="Password"
+                    fullWidth
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </MDBox>
+                <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+
+                <MDBox mt={4} mb={1}>
+                  <MDButton
+                    type="submit"
+                    variant="gradient"
+                    // onClick={setLoading(true)}
+                    color="info"
+                    fullWidth
+                  >
+                    Login
+                  </MDButton>
+                </MDBox>
+                <MDBox mt={3} mb={1} textAlign="center"></MDBox>
+              </form>
+            </MDBox>
+          </Card>
+        </>
+      )}
     </BasicLayout>
   );
 }

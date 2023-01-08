@@ -34,23 +34,8 @@ import MDInput from "components/MDInput";
 
 import axios from "axios";
 
-//icon
-import ManageSearchIcon from "@mui/icons-material/ManageSearch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-
-// DataTable
-import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
-import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
-
-// Link
-import { Link } from "react-router-dom";
-
-// modal
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
+// loader
+import { PacmanLoader } from "react-spinners";
 
 const style = {
   position: "absolute",
@@ -79,7 +64,9 @@ function withRouter(Component) {
 }
 
 function ShowRubrikAssessment(props) {
-  // console.warn("props", props.router.params.id);
+  // Loader
+  const [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#4bace9");
 
   // cpmk
   const [cpmk, setCpmk] = useState([]);
@@ -128,6 +115,8 @@ function ShowRubrikAssessment(props) {
           cpmkid: response.data,
         });
       });
+
+    setLoading(false);
   };
 
   const fetchDatas = async (idcepat) => {
@@ -203,88 +192,100 @@ function ShowRubrikAssessment(props) {
         }
       })()}
       <DashboardNavbar />
-      <MDBox py={3}>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              {/* Isinya Tarok Di sini */}
-              <Card>
-                <MDBox
-                  mx={2}
-                  mt={-3}
-                  py={3}
-                  px={2}
-                  variant="gradient"
-                  bgColor="info"
-                  borderRadius="lg"
-                  coloredShadow="info"
-                >
-                  <MDBox>
-                    <MDTypography variant="h6" color="white">
-                      Edit Kriteria
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
-                <MDBox pt={4} pb={3} px={3}>
-                  <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-                  <form method="post" onSubmit={updateHandler}>
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        label="Kriteria"
-                        value={criteria}
-                        onChange={(e) => setCriteria(e.target.value)}
-                      />
-                    </MDBox>
-
-                    {cpmk.map((datas) => (
-                      <MDBox>
-                        {datas.cpmk.map((inputcpmk, indeknya) => (
-                          <TableRow>
-                            <TableCell>
-                              <div className="form-check form-switch">
-                                <input
-                                  className="form-check-input"
-                                  type="Checkbox"
-                                  value={inputcpmk.cpmk_id}
-                                  defaultChecked={ischecked(inputcpmk.cpmk_id, indeknya)}
-                                  onChange={(e) => {
-                                    const { cpmkid } = cpmkArray;
-                                    if (e.target.checked) {
-                                      setCpmkArray({
-                                        cpmkid: [...cpmkid, inputcpmk.cpmk_id],
-                                      });
-                                    } else {
-                                      setCpmkArray({
-                                        cpmkid: cpmkid.filter((e) => e !== inputcpmk.cpmk_id),
-                                      });
-                                    }
-                                  }}
-                                  fullWidth
-                                />
-                                ({inputcpmk.code}) {inputcpmk.name}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </MDBox>
-                    ))}
-
-                    <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-
-                    <MDBox mt={4} mb={1}>
-                      <MDButton type="submit" variant="gradient" color="info">
-                        submit
-                      </MDButton>
-                    </MDBox>
-                    <MDBox mt={3} mb={1} textAlign="center"></MDBox>
-                  </form>
-                </MDBox>
-              </Card>
-            </Grid>
-          </Grid>
+      {loading ? (
+        <MDBox
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          height="100%"
+        >
+          <PacmanLoader color={color} loading={loading} size={25} />
         </MDBox>
-      </MDBox>
+      ) : (
+        <MDBox py={3}>
+          <MDBox>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                {/* Isinya Tarok Di sini */}
+                <Card>
+                  <MDBox
+                    mx={2}
+                    mt={-3}
+                    py={3}
+                    px={2}
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="info"
+                  >
+                    <MDBox>
+                      <MDTypography variant="h6" color="white">
+                        Edit Kriteria
+                      </MDTypography>
+                    </MDBox>
+                  </MDBox>
+                  <MDBox pt={4} pb={3} px={3}>
+                    <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+                    <form method="post" onSubmit={updateHandler}>
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="text"
+                          label="Kriteria"
+                          value={criteria}
+                          onChange={(e) => setCriteria(e.target.value)}
+                        />
+                      </MDBox>
+
+                      {cpmk.map((datas) => (
+                        <MDBox>
+                          {datas.cpmk.map((inputcpmk, indeknya) => (
+                            <TableRow>
+                              <TableCell>
+                                <div className="form-check form-switch">
+                                  <input
+                                    className="form-check-input"
+                                    type="Checkbox"
+                                    value={inputcpmk.cpmk_id}
+                                    defaultChecked={ischecked(inputcpmk.cpmk_id, indeknya)}
+                                    onChange={(e) => {
+                                      const { cpmkid } = cpmkArray;
+                                      if (e.target.checked) {
+                                        setCpmkArray({
+                                          cpmkid: [...cpmkid, inputcpmk.cpmk_id],
+                                        });
+                                      } else {
+                                        setCpmkArray({
+                                          cpmkid: cpmkid.filter((e) => e !== inputcpmk.cpmk_id),
+                                        });
+                                      }
+                                    }}
+                                    fullWidth
+                                  />
+                                  ({inputcpmk.code}) {inputcpmk.name}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </MDBox>
+                      ))}
+
+                      <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+
+                      <MDBox mt={4} mb={1}>
+                        <MDButton type="submit" variant="gradient" color="info">
+                          submit
+                        </MDButton>
+                      </MDBox>
+                      <MDBox mt={3} mb={1} textAlign="center"></MDBox>
+                    </form>
+                  </MDBox>
+                </Card>
+              </Grid>
+            </Grid>
+          </MDBox>
+        </MDBox>
+      )}
       <Footer />
     </DashboardLayout>
   );

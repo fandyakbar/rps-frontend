@@ -71,7 +71,9 @@ const style = {
 };
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import data from "layouts/tables/data/authorsTableData";
+
+// loader
+import { PacmanLoader } from "react-spinners";
 
 function withRouter(Component) {
   function ComponentWithRouterProp(props) {
@@ -87,6 +89,10 @@ function withRouter(Component) {
 function DetailAssessment(props) {
   // console.warn("props", props.router.params.id);
 
+  // Loader
+  const [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#4bace9");
+
   // cpmk
   const [assessment, setAssessment] = useState([]);
   const [kelompok, setKelompok] = useState(0);
@@ -96,12 +102,14 @@ function DetailAssessment(props) {
   const id_assessment = props.router.params.id;
 
   const fetchData = async () => {
+    setLoading(true);
     await axios
       .get(`http://127.0.0.1:8000/api/assessment/${id_assessment}`)
 
       .then((response) => {
         setAssessment(response.data);
       });
+    setLoading(false);
   };
 
   const [user, setUser] = useState({});
@@ -120,12 +128,6 @@ function DetailAssessment(props) {
   }, []);
 
   console.warn("di sini cek", assessment);
-
-  // cpmk.map((datas)=>{
-  //   const matkul = datas.matkul
-  //   // console.warn("matkul", matkul);
-  //   }
-  // )
 
   // Modal
   const [open, setOpen] = React.useState(false);
@@ -148,6 +150,7 @@ function DetailAssessment(props) {
   };
 
   const insertHandler = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     const formData = new FormData();
@@ -194,216 +197,236 @@ function DetailAssessment(props) {
       })()}
       <DashboardNavbar />
       <ToastContainer />
-      <MDBox py={3}>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              {/* Isinya Tarok Di sini */}
-              <Card>
-                <MDBox
-                  mx={2}
-                  mt={-3}
-                  py={3}
-                  px={2}
-                  variant="gradient"
-                  bgColor="info"
-                  borderRadius="lg"
-                  coloredShadow="info"
-                >
-                  {assessment.map((datas) => (
-                    <div>
-                      {datas.matkul.map((mk) => (
-                        <MDBox>
-                          <MDTypography variant="h6" color="white">
-                            Assessment {mk.name}
-                            <MDBox px={4} align="right">
-                              <MDButton
-                                onClick={handleOpen}
-                                color="light"
-                                size="medium"
-                                variant="gradient"
-                                iconOnly={true}
-                              >
-                                <PlaylistAddIcon />
-                              </MDButton>
-                              <Modal
-                                aria-labelledby="transition-modal-title"
-                                aria-describedby="transition-modal-description"
-                                open={open}
-                                onClose={handleClose}
-                                closeAfterTransition
-                                BackdropComponent={Backdrop}
-                                BackdropProps={{
-                                  timeout: 500,
-                                }}
-                              >
-                                <Fade in={open}>
-                                  <Box sx={style}>
-                                    <Card>
-                                      <MDBox
-                                        variant="gradient"
-                                        bgColor="info"
-                                        borderRadius="lg"
-                                        coloredShadow="info"
-                                        mx={2}
-                                        mt={-3}
-                                        p={2}
-                                        py={2}
-                                        mb={1}
-                                        textAlign="center"
-                                      >
-                                        <MDTypography
-                                          variant="h6"
-                                          fontWeight="medium"
-                                          color="white"
-                                          mt={1}
+      {loading ? (
+        <MDBox
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          height="100%"
+        >
+          <PacmanLoader color={color} loading={loading} size={25} />
+        </MDBox>
+      ) : (
+        <MDBox py={3}>
+          <MDBox>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                {/* Isinya Tarok Di sini */}
+                <Card>
+                  <MDBox
+                    mx={2}
+                    mt={-3}
+                    py={3}
+                    px={2}
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="info"
+                  >
+                    {assessment.map((datas) => (
+                      <div>
+                        {datas.matkul.map((mk) => (
+                          <MDBox>
+                            <MDTypography variant="h6" color="white">
+                              Assessment {mk.name}
+                              <MDBox px={4} align="right">
+                                <MDButton
+                                  title="Tambah Assessment"
+                                  onClick={handleOpen}
+                                  color="light"
+                                  size="medium"
+                                  variant="gradient"
+                                  iconOnly={true}
+                                >
+                                  <PlaylistAddIcon />
+                                </MDButton>
+                                <Modal
+                                  aria-labelledby="transition-modal-title"
+                                  aria-describedby="transition-modal-description"
+                                  open={open}
+                                  onClose={handleClose}
+                                  closeAfterTransition
+                                  BackdropComponent={Backdrop}
+                                  BackdropProps={{
+                                    timeout: 500,
+                                  }}
+                                >
+                                  <Fade in={open}>
+                                    <Box sx={style}>
+                                      <Card>
+                                        <MDBox
+                                          variant="gradient"
+                                          bgColor="info"
+                                          borderRadius="lg"
+                                          coloredShadow="info"
+                                          mx={2}
+                                          mt={-3}
+                                          p={2}
+                                          py={2}
+                                          mb={1}
+                                          textAlign="center"
                                         >
-                                          Tambah Assessment
-                                        </MDTypography>
-                                      </MDBox>
-                                      <MDBox pt={4} pb={3} px={3}>
-                                        <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
-                                        <form method="post" onSubmit={insertHandler}>
-                                          <MDBox mb={1}>
-                                            <MDInput
-                                              type="text"
-                                              label="name"
-                                              fullWidth
-                                              value={name}
-                                              onChange={(e) => setName(e.target.value)}
-                                            />
-                                          </MDBox>
-
-                                          <TableCell>
-                                            <div className="form-check form-switch">
-                                              <input
-                                                className="form-check-input"
-                                                type="Checkbox"
-                                                onChange={handleChange}
-                                                fullWidth
-                                                value={kelompok}
-                                              />
-                                              Kelompok
-                                            </div>
-                                          </TableCell>
-
+                                          <MDTypography
+                                            variant="h6"
+                                            fontWeight="medium"
+                                            color="white"
+                                            mt={1}
+                                          >
+                                            Tambah Assessment
+                                          </MDTypography>
+                                        </MDBox>
+                                        <MDBox pt={4} pb={3} px={3}>
                                           <MDBox display="flex" alignItems="center" ml={-1}></MDBox>
+                                          <form method="post" onSubmit={insertHandler}>
+                                            <MDBox mb={1}>
+                                              <MDInput
+                                                type="text"
+                                                label="name"
+                                                fullWidth
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
+                                              />
+                                            </MDBox>
 
-                                          <MDBox mt={4} mb={1}>
-                                            <MDButton
-                                              type="submit"
-                                              variant="gradient"
-                                              color="info"
-                                              onClick={handleClose}
-                                              fullWidth
-                                            >
-                                              Tambah
-                                            </MDButton>
-                                          </MDBox>
-                                          <MDBox mt={3} mb={1} textAlign="center"></MDBox>
-                                        </form>
-                                      </MDBox>
-                                    </Card>
-                                  </Box>
-                                </Fade>
-                              </Modal>
-                            </MDBox>
-                          </MDTypography>
-                        </MDBox>
-                      ))}
-                    </div>
-                  ))}
-                </MDBox>
+                                            <TableCell>
+                                              <div className="form-check form-switch">
+                                                <input
+                                                  className="form-check-input"
+                                                  type="Checkbox"
+                                                  onChange={handleChange}
+                                                  fullWidth
+                                                  value={kelompok}
+                                                />
+                                                Kelompok
+                                              </div>
+                                            </TableCell>
 
-                {/* Tabel Mulai */}
+                                            <MDBox
+                                              display="flex"
+                                              alignItems="center"
+                                              ml={-1}
+                                            ></MDBox>
 
-                <TableContainer>
-                  <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-                    <Table size="small">
-                      <TableRow>
-                        <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Kriteria </MDTypography>
-                        </DataTableHeadCell>
-                        <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Presentase </MDTypography>
-                        </DataTableHeadCell>
+                                            <MDBox mt={4} mb={1}>
+                                              <MDButton
+                                                type="submit"
+                                                variant="gradient"
+                                                color="info"
+                                                onClick={handleClose}
+                                                fullWidth
+                                              >
+                                                Tambah
+                                              </MDButton>
+                                            </MDBox>
+                                            <MDBox mt={3} mb={1} textAlign="center"></MDBox>
+                                          </form>
+                                        </MDBox>
+                                      </Card>
+                                    </Box>
+                                  </Fade>
+                                </Modal>
+                              </MDBox>
+                            </MDTypography>
+                          </MDBox>
+                        ))}
+                      </div>
+                    ))}
+                  </MDBox>
 
-                        <DataTableHeadCell component="th" align="center">
-                          <MDTypography variant="h6"> Aksi </MDTypography>
-                        </DataTableHeadCell>
-                      </TableRow>
+                  {/* Tabel Mulai */}
 
-                      {assessment.map((datas) => (
-                        <TableBody>
-                          {datas.datas.map((asitem, inde) => (
+                  <TableContainer>
+                    <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
+                      <Table size="small">
+                        <TableRow>
+                          <DataTableHeadCell component="th" align="center">
+                            <MDTypography variant="h6"> Kriteria </MDTypography>
+                          </DataTableHeadCell>
+                          <DataTableHeadCell component="th" align="center">
+                            <MDTypography variant="h6"> Presentase </MDTypography>
+                          </DataTableHeadCell>
+
+                          <DataTableHeadCell component="th" align="center">
+                            <MDTypography variant="h6"> Aksi </MDTypography>
+                          </DataTableHeadCell>
+                        </TableRow>
+
+                        {assessment.map((datas) => (
+                          <TableBody>
+                            {datas.datas.map((asitem, inde) => (
+                              <TableRow>
+                                <DataTableBodyCell>
+                                  <MDBox
+                                    display="inline-block"
+                                    width="30em"
+                                    color="text"
+                                    fontSize={size.sm}
+                                    px={1.5}
+                                  >
+                                    {asitem.name}
+                                  </MDBox>
+                                </DataTableBodyCell>
+                                <DataTableBodyCell>{datas.totalAsses[inde]} %</DataTableBodyCell>
+                                <DataTableBodyCell>
+                                  <Link to={`/rubrikAssessment/${asitem.id}`}>
+                                    <MDButton
+                                      title="Rubrik Assessment"
+                                      variant="gradient"
+                                      color="info"
+                                      size="medium"
+                                      iconOnly={true}
+                                    >
+                                      <AccountTreeIcon />
+                                    </MDButton>
+                                  </Link>
+                                  &nbsp; &nbsp;
+                                  <Link to={`/assessment/show/${asitem.id}`}>
+                                    <MDButton
+                                      title="Edit"
+                                      variant="gradient"
+                                      color="success"
+                                      size="medium"
+                                      iconOnly={true}
+                                    >
+                                      <BorderColorIcon />
+                                    </MDButton>
+                                  </Link>
+                                  &nbsp; &nbsp;
+                                  <MDButton
+                                    title="Hapus"
+                                    variant="gradient"
+                                    color="error"
+                                    size="medium"
+                                    iconOnly={true}
+                                    onClick={() => hapusData(asitem.id)}
+                                  >
+                                    <DeleteIcon fontSize="large" />
+                                  </MDButton>
+                                </DataTableBodyCell>
+                              </TableRow>
+                            ))}
                             <TableRow>
                               <DataTableBodyCell>
-                                <MDBox
-                                  display="inline-block"
-                                  width="30em"
-                                  color="text"
-                                  fontSize={size.sm}
-                                  px={1.5}
-                                >
-                                  {asitem.name}
-                                </MDBox>
+                                <MDTypography variant="h6"> Total </MDTypography>
                               </DataTableBodyCell>
-                              <DataTableBodyCell>{datas.totalAsses[inde]} %</DataTableBodyCell>
                               <DataTableBodyCell>
-                                <Link to={`/rubrikAssessment/${asitem.id}`}>
-                                  <MDButton
-                                    variant="gradient"
-                                    color="info"
-                                    size="medium"
-                                    iconOnly={true}
-                                  >
-                                    <AccountTreeIcon />
-                                  </MDButton>
-                                </Link>
-                                &nbsp; &nbsp;
-                                <Link to={`/assessment/show/${asitem.id}`}>
-                                  <MDButton
-                                    variant="gradient"
-                                    color="success"
-                                    size="medium"
-                                    iconOnly={true}
-                                  >
-                                    <BorderColorIcon />
-                                  </MDButton>
-                                </Link>
-                                &nbsp; &nbsp;
-                                <MDButton
-                                  variant="gradient"
-                                  color="error"
-                                  size="medium"
-                                  iconOnly={true}
-                                  onClick={() => hapusData(asitem.id)}
-                                >
-                                  <DeleteIcon fontSize="large" />
-                                </MDButton>
+                                <MDTypography variant="h6"> {datas.total} %</MDTypography>
                               </DataTableBodyCell>
                             </TableRow>
-                          ))}
-                          <TableRow>
-                            <DataTableBodyCell>
-                              <MDTypography variant="h6"> Total </MDTypography>
-                            </DataTableBodyCell>
-                            <DataTableBodyCell>
-                              <MDTypography variant="h6"> {datas.total} %</MDTypography>
-                            </DataTableBodyCell>
-                          </TableRow>
-                        </TableBody>
-                      ))}
-                    </Table>
-                  </MDBox>
-                </TableContainer>
+                          </TableBody>
+                        ))}
+                      </Table>
+                    </MDBox>
+                  </TableContainer>
 
-                {/* Tabel Akhir */}
-              </Card>
+                  {/* Tabel Akhir */}
+                </Card>
+              </Grid>
             </Grid>
-          </Grid>
+          </MDBox>
         </MDBox>
-      </MDBox>
+      )}
       <Footer />
     </DashboardLayout>
   );
